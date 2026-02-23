@@ -1,0 +1,8 @@
+# Claude session data
+.claude/
+
+# Auto-generated screenshots
+screenshots/
+
+# macOS
+.DS_Store

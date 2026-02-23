@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Projects | Everlast General Contracting Las Vegas</title>
+  <meta name="description" content="Browse Everlast General Contracting's completed projects — roofing, outdoor living, kitchen remodels, and commercial buildouts across Las Vegas, Henderson, and Summerlin." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+
+    :root {
+      --orange:    #FF810E;
+      --orange-lt: #FF9A3C;
+      --teal:      #3CCECB;
+      --black:     #1A1A1A;
+      --dark:      #111111;
+      --ash:       #666;
+      --light:     #FAFAF8;
+      --cream:     #F4EFE8;
+      --white:     #FFFFFF;
+      --ease:      cubic-bezier(.625,.05,0,1);
+      --transition: all .35s cubic-bezier(.625,.05,0,1);
+    }
+
+    html { scroll-behavior:smooth; font-size:clamp(14px, calc(10 * (100vw / 1440)), 17px); }
+    body { background:var(--white); color:var(--black); font-family:'Barlow',sans-serif; font-weight:400; overflow-x:hidden; }
+    img { display:block; }
+    a { text-decoration:none; }
+
+    /* ━━━━━━━ NAV ━━━━━━━ */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 4rem; height:100px;
+      background:rgba(255,255,255,0.98);
+      backdrop-filter:blur(20px);
+      border-bottom:1px solid rgba(0,0,0,0.07);
+      box-shadow:0 2px 30px rgba(0,0,0,0.06);
+    }
+    .nav-logo { display:inline-flex; align-items:center; text-decoration:none; overflow:hidden; flex-shrink:0; }
+    .nav-logo img { width:260px; height:70px; object-fit:cover; object-position:center center; display:block; }
+    .nav-links { display:flex; gap:2.8rem; list-style:none; align-items:center; }
+    .nav-links a { color:var(--ash); font-size:0.75rem; letter-spacing:0.18em; text-transform:uppercase; font-weight:500; transition:color .25s; }
+    .nav-links a:hover, .nav-links a.active { color:var(--black); }
+    .nav-cta { background:var(--orange) !important; color:#fff !important; padding:0.75rem 1.8rem !important; font-weight:600 !important; letter-spacing:0.14em !important; border-radius:3px; transition:var(--transition) !important; }
+    .nav-cta:hover { background:var(--orange-lt) !important; transform:translateY(-2px) !important; }
+
+    /* ━━━━━━━ PAGE HERO ━━━━━━━ */
+    .page-hero {
+      min-height:52vh; position:relative; overflow:hidden;
+      display:flex; align-items:flex-end;
+    }
+    .page-hero-bg { position:absolute; inset:0; }
+    .page-hero-bg img { width:100%; height:100%; object-fit:cover; object-position:center 40%; }
+    .page-hero-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(17,17,17,.92) 0%, rgba(17,17,17,.45) 60%, rgba(17,17,17,.2) 100%);
+    }
+    .page-hero-content { position:relative; z-index:2; padding:0 6rem 5rem; }
+    .page-hero-eyebrow { font-size:0.72rem; letter-spacing:.38em; text-transform:uppercase; color:var(--orange); margin-bottom:1.4rem; font-weight:700; display:flex; align-items:center; gap:.8rem; }
+    .page-hero-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(5rem,9vw,9.5rem); line-height:.88; color:#fff; }
+    .page-hero-sub { font-size:clamp(1rem,1.5vw,1.2rem); color:rgba(255,255,255,.5); margin-top:1.6rem; font-style:italic; font-weight:300; max-width:540px; line-height:1.8; }
+
+    /* ━━━━━━━ FILTER BAR ━━━━━━━ */
+    .filter-bar {
+      background:var(--white); border-bottom:1px solid rgba(0,0,0,.08);
+      padding:0 4rem; display:flex; align-items:center; gap:0; position:sticky; top:100px; z-index:100;
+      overflow-x:auto;
+    }
+    .filter-btn {
+      background:none; border:none; cursor:pointer;
+      font-family:'Barlow Condensed',sans-serif; font-size:0.82rem; font-weight:700;
+      letter-spacing:.18em; text-transform:uppercase; color:var(--ash);
+      padding:1.4rem 1.8rem; border-bottom:2.5px solid transparent;
+      transition:color .25s, border-color .25s; white-space:nowrap;
+    }
+    .filter-btn:hover { color:var(--black); }
+    .filter-btn.active { color:var(--orange); border-bottom-color:var(--orange); }
+
+    /* ━━━━━━━ PROJECTS GRID ━━━━━━━ */
+    .projects-section { padding:5rem 4rem 8rem; background:var(--white); }
+    .projects-count { font-size:0.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--ash); margin-bottom:3rem; font-weight:600; }
+    .projects-count span { color:var(--orange); font-weight:700; }
+
+    .projects-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; }
+
+    .proj-card {
+      position:relative; overflow:hidden; background:var(--dark);
+      cursor:pointer;
+    }
+    .proj-card-img { height:380px; overflow:hidden; }
+    .proj-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .8s var(--ease); }
+    .proj-card:hover .proj-card-img img { transform:scale(1.09); }
+
+    .proj-card-body {
+      position:absolute; bottom:0; left:0; right:0;
+      padding:2.4rem 2.2rem;
+      background:linear-gradient(to top, rgba(17,17,17,.95) 0%, rgba(17,17,17,.6) 60%, transparent 100%);
+      transform:translateY(60px);
+      transition:transform .45s var(--ease);
+    }
+    .proj-card:hover .proj-card-body { transform:translateY(0); }
+
+    .proj-cat {
+      display:inline-block; background:var(--orange); color:#fff;
+      font-family:'Barlow Condensed',sans-serif; font-size:0.65rem;
+      letter-spacing:.22em; text-transform:uppercase; padding:.28rem 1rem;
+      margin-bottom:1rem; border-radius:2px; font-weight:700;
+    }
+    .proj-title { font-family:'Bebas Neue',sans-serif; font-size:1.9rem; letter-spacing:.04em; color:#fff; line-height:1.05; margin-bottom:.6rem; }
+    .proj-location { font-size:0.75rem; letter-spacing:.14em; text-transform:uppercase; color:rgba(255,255,255,.45); font-weight:500; margin-bottom:1.1rem; }
+    .proj-desc { font-size:0.88rem; color:rgba(255,255,255,.7); line-height:1.75; opacity:0; transform:translateY(10px); transition:opacity .35s var(--ease) .1s, transform .35s var(--ease) .1s; }
+    .proj-card:hover .proj-desc { opacity:1; transform:translateY(0); }
+    .proj-link { display:inline-flex; align-items:center; gap:.5rem; font-size:0.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--orange); font-weight:700; margin-top:1.2rem; opacity:0; transition:opacity .35s var(--ease) .15s; }
+    .proj-card:hover .proj-link { opacity:1; }
+
+    /* Featured wide card */
+    .proj-card.featured { grid-column:span 2; }
+    .proj-card.featured .proj-card-img { height:480px; }
+    .proj-card.featured .proj-title { font-size:2.8rem; }
+
+    /* ━━━━━━━ STATS STRIP ━━━━━━━ */
+    .stats-strip { background:var(--dark); padding:4rem; display:grid; grid-template-columns:repeat(4,1fr); gap:2rem; text-align:center; }
+    .strip-num { font-family:'Bebas Neue',sans-serif; font-size:clamp(2.8rem,4vw,4rem); color:var(--orange); line-height:1; }
+    .strip-label { font-size:0.7rem; letter-spacing:.18em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-top:.5rem; font-weight:600; }
+
+    /* ━━━━━━━ CTA SECTION ━━━━━━━ */
+    .projects-cta {
+      position:relative; height:420px; overflow:hidden;
+      display:flex; align-items:center; justify-content:center; text-align:center;
+    }
+    .projects-cta-bg { position:absolute; inset:0; }
+    .projects-cta-bg img { width:100%; height:100%; object-fit:cover; }
+    .projects-cta-overlay { position:absolute; inset:0; background:rgba(17,17,17,.8); }
+    .projects-cta-content { position:relative; z-index:2; max-width:640px; padding:2rem; }
+    .projects-cta h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(3rem,5vw,5.5rem); color:#fff; line-height:.9; margin-bottom:1.6rem; }
+    .projects-cta p { font-size:1.1rem; color:rgba(255,255,255,.55); font-style:italic; margin-bottom:2.8rem; line-height:1.8; }
+
+    /* ━━━━━━━ FOOTER ━━━━━━━ */
+    footer { background:var(--dark); border-top:1px solid rgba(255,255,255,.06); padding:3rem 4rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; }
+    .footer-logo { display:inline-flex; align-items:center; background:#fff; border-radius:8px; padding:6px 16px; overflow:hidden; }
+    .footer-logo img { width:220px; height:60px; object-fit:cover; object-position:center center; display:block; }
+    .footer-copy { font-size:0.7rem; color:rgba(255,255,255,.25); }
+    .footer-links { display:flex; gap:2rem; list-style:none; }
+    .footer-links a { font-size:0.7rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); transition:color .2s; }
+    .footer-links a:hover { color:var(--orange); }
+
+    /* ━━━━━━━ BTN ━━━━━━━ */
+    .btn-primary { background:var(--orange); color:#fff; padding:1.2rem 3rem; font-size:0.76rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; border-radius:3px; display:inline-block; transition:var(--transition); }
+    .btn-primary:hover { background:var(--orange-lt); transform:translateY(-3px); box-shadow:0 10px 28px rgba(255,129,14,.4); }
+
+    /* ━━━━━━━ REVEAL ━━━━━━━ */
+    .reveal { opacity:0; transform:translateY(32px); transition:opacity .7s var(--ease), transform .7s var(--ease); }
+    .reveal.visible { opacity:1; transform:translateY(0); }
+
+    /* hidden cards when filtered */
+    .proj-card.hidden { display:none; }
+
+    /* ━━━━━━━ RESPONSIVE ━━━━━━━ */
+    @media (max-width:1100px) {
+      nav { padding:0 2rem; height:80px; }
+      .nav-logo img { width:200px; height:54px; }
+      .nav-links { display:none; }
+      .filter-bar { top:80px; padding:0 2rem; }
+      .projects-grid { grid-template-columns:1fr 1fr; }
+      .proj-card.featured { grid-column:span 2; }
+      .page-hero-content { padding:0 3rem 4rem; }
+      .projects-section { padding:4rem 2rem 6rem; }
+      .stats-strip { grid-template-columns:1fr 1fr; gap:3rem; }
+      footer { padding:2rem; flex-direction:column; text-align:center; }
+    }
+    @media (max-width:640px) {
+      nav { height:72px; }
+      .nav-logo img { width:180px; height:48px; }
+      .filter-bar { top:72px; }
+      .projects-grid { grid-template-columns:1fr; }
+      .proj-card.featured { grid-column:span 1; }
+      .proj-card.featured .proj-card-img { height:320px; }
+      .proj-card-img { height:300px; }
+      .proj-card-body { transform:translateY(0); }
+      .proj-desc, .proj-link { opacity:1; transform:none; }
+      .stats-strip { grid-template-columns:1fr 1fr; padding:3rem 2rem; }
+      .page-hero-content { padding:0 2rem 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ░░ NAV ░░ -->
+  <nav>
+    <a href="index.html" class="nav-logo" aria-label="Everlast General Contracting">
+      <img src="Brand Assets/IMG_7498.PNG" alt="Everlast General Contracting" />
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#why">Why Us</a></li>
+      <li><a href="index.html#work">Our Work</a></li>
+      <li><a href="projects.html" class="active">Projects</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Free Estimate</a></li>
+    </ul>
+  </nav>
+
+  <!-- ░░ PAGE HERO ░░ -->
+  <div class="page-hero">
+    <div class="page-hero-bg">
+      <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1800&q=88" alt="Everlast project portfolio Las Vegas" />
+    </div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <p class="page-hero-eyebrow">Las Vegas · Henderson · Summerlin</p>
+      <h1 class="page-hero-title">Our Projects.</h1>
+      <p class="page-hero-sub">Over 500 completed projects across the Las Vegas Valley. Browse by category to find work similar to yours.</p>
+    </div>
+  </div>
+
+  <!-- ░░ FILTER BAR ░░ -->
+  <div class="filter-bar" role="tablist">
+    <button class="filter-btn active" data-filter="all" onclick="filterProjects('all', this)">All Projects</button>
+    <button class="filter-btn" data-filter="roofing" onclick="filterProjects('roofing', this)">Roofing</button>
+    <button class="filter-btn" data-filter="outdoor" onclick="filterProjects('outdoor', this)">Outdoor Living</button>
+    <button class="filter-btn" data-filter="remodel" onclick="filterProjects('remodel', this)">Home Remodeling</button>
+    <button class="filter-btn" data-filter="commercial" onclick="filterProjects('commercial', this)">Commercial</button>
+  </div>
+
+  <!-- ░░ PROJECTS GRID ░░ -->
+  <div class="projects-section">
+    <p class="projects-count"><span id="proj-count">12</span> Projects</p>
+    <div class="projects-grid" id="projects-grid">
+
+      <!-- Featured: Kitchen Remodel -->
+      <div class="proj-card featured reveal" data-cat="remodel">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1556909211-36987daf7b4d?auto=format&fit=crop&w=1200&q=88" alt="Summerlin luxury kitchen remodel" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Kitchen & Bath</span>
+          <h2 class="proj-title">Summerlin Kitchen Remodel</h2>
+          <p class="proj-location">Summerlin, Las Vegas · 2025</p>
+          <p class="proj-desc">Full gut renovation — custom cabinetry, Calacatta quartz countertops, designer backsplash, and premium appliance package. Completed 3 days ahead of schedule.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Roofing -->
+      <div class="proj-card reveal" data-cat="roofing" style="transition-delay:.1s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1601758174114-e711c26e8e63?auto=format&fit=crop&w=700&q=85" alt="Las Vegas tile roofing installation" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Roofing</span>
+          <h2 class="proj-title">Henderson Tile Roof Replacement</h2>
+          <p class="proj-location">Henderson, NV · 2025</p>
+          <p class="proj-desc">Full 3,200 sq ft tile roof replacement. Desert-rated underlayment, new fascia, seamless gutters, and a 10-year warranty.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Pool / Outdoor -->
+      <div class="proj-card reveal" data-cat="outdoor" style="transition-delay:.15s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=700&q=85" alt="Las Vegas luxury pool and outdoor living" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Outdoor Living</span>
+          <h2 class="proj-title">Centennial Hills Pool Deck</h2>
+          <p class="proj-location">Centennial Hills, NV · 2025</p>
+          <p class="proj-desc">Custom travertine pool deck, pergola with integrated LED lighting, and built-in BBQ island.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Featured: Luxury Home Exterior -->
+      <div class="proj-card featured reveal" data-cat="outdoor" style="transition-delay:.2s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=88" alt="Luxury Las Vegas home exterior renovation" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Exterior & Outdoor</span>
+          <h2 class="proj-title">Anthem Country Club Estate</h2>
+          <p class="proj-location">Henderson, NV · 2025</p>
+          <p class="proj-desc">Complete exterior transformation — stucco refinish, new landscaping, paver driveway, and covered patio extension. One of our flagship Las Vegas luxury projects.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Roofing 2 -->
+      <div class="proj-card reveal" data-cat="roofing" style="transition-delay:.05s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=700&q=85" alt="Roofing crew Las Vegas installation" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Roofing</span>
+          <h2 class="proj-title">North Las Vegas Flat Roof</h2>
+          <p class="proj-location">North Las Vegas, NV · 2024</p>
+          <p class="proj-desc">Commercial flat roof system installation with 30-year membrane, drains, and full insulation upgrade for a 6-unit commercial strip.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Kitchen 2 -->
+      <div class="proj-card reveal" data-cat="remodel" style="transition-delay:.1s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1556909172-54557c7e4fb7?auto=format&fit=crop&w=700&q=85" alt="Modern kitchen renovation Las Vegas" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Kitchen & Bath</span>
+          <h2 class="proj-title">Green Valley Ranch Kitchen</h2>
+          <p class="proj-location">Henderson, NV · 2024</p>
+          <p class="proj-desc">Open-concept kitchen transformation with waterfall island, smart appliances, and custom built-in pantry cabinetry.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Commercial -->
+      <div class="proj-card reveal" data-cat="commercial" style="transition-delay:.15s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=700&q=85" alt="Las Vegas commercial rental property buildout" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Commercial</span>
+          <h2 class="proj-title">Rental Property Portfolio Upgrade</h2>
+          <p class="proj-location">Las Vegas, NV · 2024</p>
+          <p class="proj-desc">8-unit multifamily property renovation — new roofing, exterior paint, HVAC, and interior unit refreshes to increase occupancy value.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Luxury exterior 2 -->
+      <div class="proj-card reveal" data-cat="outdoor" style="transition-delay:.05s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=700&q=85" alt="Luxury home exterior Las Vegas" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Outdoor Living</span>
+          <h2 class="proj-title">Summerlin Patio & Turf Install</h2>
+          <p class="proj-location">Summerlin, Las Vegas · 2024</p>
+          <p class="proj-desc">Aluminum patio cover, synthetic turf, concrete borders, and desert-friendly landscaping. Zero-maintenance backyard designed for Vegas summers.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Home exterior / stucco -->
+      <div class="proj-card reveal" data-cat="roofing" style="transition-delay:.1s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=700&q=85" alt="Modern home exterior Las Vegas" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Roofing & Exterior</span>
+          <h2 class="proj-title">Skye Canyon Exterior Refresh</h2>
+          <p class="proj-location">Skye Canyon, NV · 2024</p>
+          <p class="proj-desc">New roof, stucco recoat, trim paint, and updated gutters. Curb appeal transformation that raised the home's appraisal by $40k.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- ADU / remodel -->
+      <div class="proj-card reveal" data-cat="remodel" style="transition-delay:.15s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=700&q=85" alt="Las Vegas home addition ADU" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Home Remodeling</span>
+          <h2 class="proj-title">North LV Garage Conversion ADU</h2>
+          <p class="proj-location">North Las Vegas, NV · 2024</p>
+          <p class="proj-desc">Full garage-to-ADU conversion — insulation, drywall, mini-split HVAC, kitchenette, and bathroom addition. Fully permitted by Clark County.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Commercial 2 -->
+      <div class="proj-card reveal" data-cat="commercial" style="transition-delay:.2s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?auto=format&fit=crop&w=700&q=85" alt="Commercial buildout Las Vegas" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Commercial</span>
+          <h2 class="proj-title">Spring Valley Office Renovation</h2>
+          <p class="proj-location">Spring Valley, Las Vegas · 2023</p>
+          <p class="proj-desc">Full tenant improvement for a 4,000 sq ft medical office — open-plan layout, ADA compliance, new lighting, and flooring throughout.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+      <!-- Outdoor 3 -->
+      <div class="proj-card reveal" data-cat="outdoor" style="transition-delay:.25s">
+        <div class="proj-card-img">
+          <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=700&q=85" alt="Las Vegas luxury home modern exterior" loading="lazy" />
+        </div>
+        <div class="proj-card-body">
+          <span class="proj-cat">Outdoor Living</span>
+          <h2 class="proj-title">Henderson Block Wall & BBQ Island</h2>
+          <p class="proj-location">Henderson, NV · 2023</p>
+          <p class="proj-desc">Custom CMU block wall with stucco finish, built-in gas BBQ island, shade sail posts, and stamped concrete patio to tie it all together.</p>
+          <a href="index.html#contact" class="proj-link">Start a Similar Project →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ░░ STATS STRIP ░░ -->
+  <div class="stats-strip">
+    <div><div class="strip-num" data-target="500" data-suffix="+">500+</div><div class="strip-label">Projects Completed</div></div>
+    <div><div class="strip-num" data-target="15" data-suffix="+">15+</div><div class="strip-label">Years in Las Vegas</div></div>
+    <div><div class="strip-num" data-target="4" data-suffix="">4</div><div class="strip-label">Service Categories</div></div>
+    <div><div class="strip-num" data-target="100" data-suffix="%">100%</div><div class="strip-label">Licensed & Insured</div></div>
+  </div>
+
+  <!-- ░░ CTA ░░ -->
+  <div class="projects-cta">
+    <div class="projects-cta-bg">
+      <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=88" alt="Luxury Las Vegas home" loading="lazy" />
+    </div>
+    <div class="projects-cta-overlay"></div>
+    <div class="projects-cta-content">
+      <h2>Your Project Starts Here.</h2>
+      <p>Every project in this gallery started with a single conversation. Let's talk about yours.</p>
+      <a href="index.html#contact" class="btn-primary">Get a Free Estimate</a>
+    </div>
+  </div>
+
+  <!-- ░░ FOOTER ░░ -->
+  <footer>
+    <div class="footer-logo">
+      <img src="Brand Assets/IMG_7498.PNG" alt="Everlast General Contracting" />
+    </div>
+    <p class="footer-copy">© 2026 Everlast General Contracting · Las Vegas, NV · All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="index.html#services">Services</a></li>
+      <li><a href="index.html#why">About</a></li>
+      <li><a href="index.html#work">Our Work</a></li>
+      <li><a href="projects.html">Projects</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    /* Scroll reveal */
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    /* Stat counters */
+    function animateCounter(el) {
+      const target = parseInt(el.dataset.target, 10);
+      const suffix = el.dataset.suffix || '';
+      const dur = 1600; let t0 = null;
+      const step = ts => {
+        if (!t0) t0 = ts;
+        const p = Math.min((ts - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = Math.floor(ease * target) + suffix;
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+    const statIO = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && e.target.dataset.target) { animateCounter(e.target); statIO.unobserve(e.target); }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-target]').forEach(el => statIO.observe(el));
+
+    /* Filter */
+    function filterProjects(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.proj-card');
+      let count = 0;
+      cards.forEach(c => {
+        const match = cat === 'all' || c.dataset.cat === cat;
+        c.classList.toggle('hidden', !match);
+        if (match) count++;
+      });
+      const countEl = document.getElementById('proj-count');
+      if (countEl) countEl.textContent = count;
+    }
+  </script>
+</body>
+</html>
