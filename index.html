@@ -390,14 +390,14 @@
     .why-photo-wrap:hover img { transform:scale(1.04); }
     .why-overlay { position:absolute; inset:0; z-index:2; background:linear-gradient(to top, rgba(17,17,17,.85) 0%, rgba(17,17,17,.12) 55%); }
     .why-caption { position:absolute; bottom:2.5rem; left:2.5rem; right:2.5rem; z-index:3; }
-    .why-quote { font-family:'Barlow',sans-serif; font-style:italic; font-size:1.2rem; line-height:1.7; color:rgba(255,255,255,.9); margin-bottom:.9rem; font-weight:300; }
+    .why-quote { font-family:'Barlow',sans-serif; font-style:italic; font-size:1.4rem; line-height:1.7; color:rgba(255,255,255,.95); margin-bottom:.9rem; font-weight:400; }
     .why-attr { font-size:0.68rem; letter-spacing:.22em; text-transform:uppercase; color:var(--orange); font-weight:700; }
-    .why-right { }
     #why .s-title { color:var(--black); }
-    #why .s-desc { color:#666; }
+    #why .s-desc { color:#555; font-size:1.1rem; line-height:1.9; }
 
     /* Scroll-triggered why cards */
-    .why-cards { display:flex; flex-direction:column; gap:1.6rem; margin-top:3rem; }
+    .why-right { max-width:560px; }
+    .why-cards { display:flex; flex-direction:column; gap:2rem; margin-top:3rem; }
     .why-card {
       background:var(--white);
       border-radius:6px;
@@ -433,8 +433,8 @@
       font-family:'Bebas Neue',sans-serif; font-size:4rem; line-height:1;
       color:rgba(0,0,0,.04); letter-spacing:.04em;
     }
-    .why-card-title { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; letter-spacing:.06em; color:var(--black); margin-bottom:.4rem; font-weight:700; text-transform:uppercase; }
-    .why-card-desc { font-size:0.95rem; color:var(--ash); line-height:1.8; }
+    .why-card-title { font-family:'Barlow Condensed',sans-serif; font-size:1.45rem; letter-spacing:.06em; color:var(--black); margin-bottom:.4rem; font-weight:700; text-transform:uppercase; }
+    .why-card-desc { font-size:1.05rem; color:#555; line-height:1.8; }
     .why-progress-bar { height:3px; background:rgba(0,0,0,.06); border-radius:2px; margin-bottom:3rem; overflow:hidden; }
     .why-progress-fill { height:100%; background:var(--orange); width:0; transition:width 2.5s var(--ease); }
     .why-progress-fill.filled { width:100%; }
@@ -501,12 +501,14 @@
     /* ━━━━━━━ GET STARTED — MULTI-STEP FORM ━━━━━━━ */
     #contact {
       background:var(--dark);
-      padding:8rem 4rem;
+      background-image:url('https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1800&q=88');
+      background-size:cover; background-position:center top; background-attachment:fixed;
+      padding:8rem 4rem 5rem;
       position:relative; overflow:hidden;
     }
     #contact::before {
       content:''; position:absolute; inset:0;
-      background:radial-gradient(ellipse at 30% 50%, rgba(255,129,14,.06) 0%, transparent 60%);
+      background:linear-gradient(135deg, rgba(8,8,8,.97) 0%, rgba(8,8,8,.95) 50%, rgba(8,8,8,.92) 100%);
       pointer-events:none;
     }
     .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:7rem; align-items:start; position:relative; z-index:1; }
@@ -515,8 +517,8 @@
     .contact-left .s-title { color:#fff; }
     .contact-tagline {
       font-family:'Barlow',sans-serif; font-style:italic;
-      font-size:clamp(1rem,1.4vw,1.2rem); color:rgba(255,255,255,.45);
-      max-width:460px; line-height:1.85; font-weight:300; margin-bottom:3rem;
+      font-size:clamp(1.05rem,1.5vw,1.25rem); color:rgba(255,255,255,.78);
+      max-width:460px; line-height:1.85; font-weight:500; margin-bottom:3rem;
     }
 
     /* 60-second CTA badge */
@@ -737,22 +739,27 @@
       .hero-trust-strip { padding:1.2rem 2rem; gap:1.5rem; }
       .services-grid { grid-template-columns:1fr 1fr; gap:2px; }
       .why-layout { grid-template-columns:1fr; gap:3rem; }
+      .why-right { max-width:100%; }
       .why-photo-wrap img { height:360px; }
-      .work-row,.work-row.invert { grid-template-columns:1fr; min-height:auto; }
-      .work-img { min-height:360px; }
-      .work-text { padding:3rem 2rem; }
-      .work-row.invert .work-text { order:0; }
       .img-grid { grid-template-columns:1fr 1fr; }
       .process-grid { grid-template-columns:1fr 1fr; gap:2rem; }
       .process-connector { display:none; }
       .contact-grid { grid-template-columns:1fr; gap:3rem; }
       .form-row-dark { grid-template-columns:1fr; }
       section { padding:5rem 2rem; }
-      #contact { padding:5rem 2rem; }
+      #contact { padding:5rem 2rem; background-attachment:scroll; }
       .img-break-content { padding:0 2.5rem; }
       .footer-main { grid-template-columns:1fr 1fr; gap:3rem; padding:4rem 2rem 3rem; }
       .footer-bottom { padding:1.5rem 2rem; flex-direction:column; text-align:center; }
       .hero-form-row { grid-template-columns:1fr; }
+      /* Slideshow tablet: 2 cards */
+      .proj-card { min-width:calc(50% - .75rem); }
+      .work-header { flex-direction:column; align-items:flex-start; gap:2rem; }
+      /* Form CTA row */
+      .form-cta-row { flex-direction:column; }
+      .form-cta-call, .form-cta-text { justify-content:center; width:100%; }
+      /* FAQ */
+      .faq-section { padding:5rem 2rem; }
     }
     @media (max-width:640px) {
       nav { height:68px; }
@@ -770,7 +777,126 @@
       .footer-main { grid-template-columns:1fr; }
       .multistep-form { padding:2rem 1.4rem; }
       .contact-grid { gap:2.5rem; }
+      /* Slideshow mobile: 1 card */
+      .proj-card { min-width:calc(100% - 0px); }
+      .proj-card-img { height:240px; }
+      /* FAQ mobile */
+      .faq-q span { font-size:1.05rem; }
+      .faq-section { padding:4rem 1.5rem; }
     }
+
+    /* ━━━━━━━ PROJECT SLIDESHOW ━━━━━━━ */
+    #work { background:var(--white); overflow:hidden; }
+    #work .s-title { color:var(--black); }
+    .work-header { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:3.5rem; }
+    .work-header-nav { display:flex; gap:.8rem; align-items:center; }
+    .slider-btn {
+      width:52px; height:52px; border-radius:50%;
+      border:1.5px solid rgba(0,0,0,.15); background:var(--white);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; color:var(--black);
+      transition:all .3s var(--ease);
+    }
+    .slider-btn:hover { background:var(--orange); border-color:var(--orange); color:#fff; transform:scale(1.08); }
+    .projects-slider-wrap { overflow:hidden; position:relative; }
+    .projects-slider {
+      display:flex; gap:1.5rem;
+      transition:transform .55s cubic-bezier(.625,.05,0,1);
+      will-change:transform;
+    }
+    .proj-card {
+      min-width:calc(33.333% - 1rem);
+      background:var(--cream);
+      border-radius:6px; overflow:hidden;
+      display:flex; flex-direction:column;
+      transition:transform .4s var(--ease), box-shadow .4s var(--ease);
+      flex-shrink:0;
+    }
+    .proj-card:hover { transform:translateY(-8px); box-shadow:0 24px 56px rgba(0,0,0,.13); }
+    .proj-card-img { overflow:hidden; height:300px; }
+    .proj-card-img img { width:100%; height:100%; object-fit:cover; transition:transform .75s var(--ease); }
+    .proj-card:hover .proj-card-img img { transform:scale(1.07); }
+    .proj-card-body { padding:2.2rem 2rem; display:flex; flex-direction:column; flex:1; }
+    .proj-tag { display:inline-block; background:var(--orange); color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.68rem; letter-spacing:.24em; text-transform:uppercase; padding:.32rem 1rem; border-radius:3px; margin-bottom:1.2rem; font-weight:700; align-self:flex-start; }
+    .proj-title { font-family:'Bebas Neue',sans-serif; font-size:clamp(1.8rem,2.8vw,2.4rem); letter-spacing:.04em; color:var(--black); line-height:1; margin-bottom:1rem; }
+    .proj-desc { font-size:.97rem; color:#666; line-height:1.8; margin-bottom:1.8rem; flex:1; }
+    .proj-link { font-size:0.7rem; letter-spacing:.2em; text-transform:uppercase; color:var(--orange); display:inline-flex; align-items:center; gap:.5rem; font-weight:700; border-bottom:1.5px solid rgba(255,129,14,.3); padding-bottom:.25rem; transition:gap .2s, border-color .2s; align-self:flex-start; }
+    .proj-link:hover { gap:.9rem; border-color:var(--orange); }
+    .slider-dots { display:flex; justify-content:center; gap:.7rem; margin-top:2.5rem; }
+    .slider-dot { width:8px; height:8px; border-radius:50%; background:rgba(0,0,0,.15); border:none; cursor:pointer; transition:all .3s; padding:0; }
+    .slider-dot.active { background:var(--orange); width:28px; border-radius:4px; }
+
+    /* ━━━━━━━ FORM CTA ROW ━━━━━━━ */
+    .form-cta-row {
+      display:flex; gap:1rem; margin-top:3.5rem;
+      justify-content:center; align-items:center;
+      position:relative; z-index:1;
+      border-top:1px solid rgba(255,255,255,.07);
+      padding-top:2.5rem;
+    }
+    .form-cta-call, .form-cta-text {
+      display:inline-flex; align-items:center; gap:.7rem;
+      padding:1.1rem 2.4rem; border-radius:4px;
+      font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; letter-spacing:.12em; text-transform:uppercase; font-weight:700;
+      transition:all .3s var(--ease); text-decoration:none;
+    }
+    .form-cta-call {
+      background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);
+      color:#fff; border:none;
+      animation:callGlow 2.4s ease-in-out infinite;
+      background-size:300% 300%;
+    }
+    .form-cta-call:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(255,129,14,.5); }
+    .form-cta-text {
+      background:transparent; color:rgba(255,255,255,.8);
+      border:1.5px solid rgba(255,255,255,.25);
+    }
+    .form-cta-text:hover { border-color:rgba(255,255,255,.6); color:#fff; background:rgba(255,255,255,.06); transform:translateY(-2px); }
+
+    /* ━━━━━━━ FAQ SECTION ━━━━━━━ */
+    .faq-section {
+      background:var(--light);
+      padding:8rem 4rem;
+    }
+    .faq-inner { max-width:860px; margin:0 auto; }
+    .faq-title {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(3rem,5vw,5rem);
+      letter-spacing:.04em; color:var(--black); line-height:1;
+      margin-bottom:1.2rem;
+    }
+    .faq-subtitle { font-size:1.05rem; color:#666; line-height:1.8; margin-bottom:4rem; max-width:540px; }
+    .faq-list { display:flex; flex-direction:column; gap:0; border-top:1px solid rgba(0,0,0,.08); }
+    .faq-item { border-bottom:1px solid rgba(0,0,0,.08); }
+    .faq-q {
+      width:100%; display:flex; align-items:center; justify-content:space-between; gap:2rem;
+      padding:1.8rem 0; background:none; border:none; cursor:pointer;
+      text-align:left;
+    }
+    .faq-q span { font-family:'Barlow Condensed',sans-serif; font-size:1.25rem; letter-spacing:.04em; color:var(--black); font-weight:700; text-transform:uppercase; line-height:1.3; }
+    .faq-icon { width:36px; height:36px; border-radius:50%; border:1.5px solid rgba(0,0,0,.12); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all .3s; color:var(--ash); }
+    .faq-item.open .faq-icon { background:var(--orange); border-color:var(--orange); color:#fff; transform:rotate(180deg); }
+    .faq-item.open .faq-q span { color:var(--orange); }
+    .faq-a {
+      max-height:0; overflow:hidden;
+      transition:max-height .4s cubic-bezier(.625,.05,0,1), padding .3s;
+      padding:0;
+    }
+    .faq-a p { font-size:1rem; color:#555; line-height:1.9; padding-bottom:1.8rem; }
+    .faq-item.open .faq-a { max-height:300px; }
+
+    /* ━━━━━━━ FOOTER BACKGROUND IMAGE ━━━━━━━ */
+    footer { position:relative; overflow:hidden; }
+    .footer-bg-wrap {
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+    }
+    .footer-bg-wrap img { width:100%; height:100%; object-fit:cover; object-position:center 30%; }
+    .footer-bg-overlay {
+      position:absolute; inset:0;
+      background:rgba(15,15,15,0.95);
+    }
+    .footer-main { position:relative; z-index:1; }
+    .footer-bottom { position:relative; z-index:1; }
 
     /* ━━━━━━━ CURSOR TRAIL ━━━━━━━ */
     @media (hover:hover) and (pointer:fine) { body { cursor:none; } }
@@ -848,13 +974,13 @@
   <section class="hero">
     <!-- Background: dark atmospheric job site -->
     <div class="hero-bg">
-      <img src="Brand Assets/hero-bg.png" alt="Las Vegas rooftop construction" />
+      <img src="Brand Assets/hero-bg-new.png" alt="Las Vegas rooftop construction aerial view" style="object-position:center center;" />
     </div>
     <div class="hero-bg-overlay"></div>
 
-    <!-- Worker portrait — right side -->
+    <!-- Gemini rooftop — right side -->
     <div class="hero-worker-wrap" aria-hidden="true">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=900&q=88" alt="" />
+      <img src="Brand Assets/hero-bg-new.png" alt="" style="object-fit:cover;object-position:center center;" />
     </div>
 
     <div class="hero-particles" aria-hidden="true"></div>
@@ -1034,10 +1160,10 @@
         </div>
       </div>
 
-      <!-- 04 Commercial — Las Vegas main street buildout -->
+      <!-- 04 Commercial — Las Vegas multifamily home -->
       <div class="svc-card reveal" style="transition-delay:.3s">
         <div class="svc-img">
-          <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?auto=format&fit=crop&w=700&q=85" alt="Commercial buildout Las Vegas main street storefront" />
+          <img src="https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=700&q=85" alt="Las Vegas multifamily residential complex — commercial buildout" />
         </div>
         <div class="svc-body">
           <div class="svc-num">04</div>
@@ -1070,9 +1196,9 @@
   <!-- ░░ WHY EVERLAST — SCROLL ANIMATION ░░ -->
   <section id="why">
     <div class="why-layout">
-      <!-- New Las Vegas roofing project image -->
+      <!-- Ultra-realistic Las Vegas roofing project -->
       <div class="why-photo-wrap reveal">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=88" alt="Las Vegas roofing project — desert tile roof installation" loading="lazy" />
+        <img src="Brand Assets/hero-bg-new.png" alt="Las Vegas roofing project — aerial view" loading="lazy" style="object-position:center center;" />
         <div class="why-overlay"></div>
         <div class="why-caption">
           <p class="why-quote">"We don't build for the inspection — we build for the next 30 years."</p>
@@ -1148,48 +1274,111 @@
     </div>
   </section>
 
-  <!-- ░░ OUR WORK ░░ -->
+  <!-- ░░ OUR WORK — ANIMATED SLIDESHOW ░░ -->
   <section id="work">
-    <p class="s-label">Our Work</p>
-    <h2 class="s-title">Craftsmanship<br>You Can See.</h2>
-
-    <div class="work-row reveal" style="margin-top:4rem">
-      <div class="work-img">
-        <img src="https://images.unsplash.com/photo-1556909211-36987daf7b4d?auto=format&fit=crop&w=950&q=88" alt="Summerlin luxury kitchen remodel Las Vegas" loading="lazy" />
+    <div class="work-header">
+      <div>
+        <p class="s-label">Our Work</p>
+        <h2 class="s-title">Craftsmanship<br>You Can See.</h2>
       </div>
-      <div class="work-text">
-        <span class="work-tag">Kitchen &amp; Bath</span>
-        <h3 class="work-title">Summerlin Kitchen Remodel</h3>
-        <p class="work-desc">Complete gut-and-rebuild — custom cabinetry, quartz countertops, designer tile backsplash, and all-new appliances. Delivered 3 days ahead of schedule.</p>
-        <a href="#contact" class="work-link">Start Your Project →</a>
-      </div>
-    </div>
-
-    <div class="work-row invert reveal" style="transition-delay:.1s;margin-top:3px">
-      <div class="work-text">
-        <span class="work-tag">Roofing &amp; Exterior</span>
-        <h3 class="work-title">Henderson Roofing Restoration</h3>
-        <p class="work-desc">Full tile roof replacement on a 3,200 sq ft home. Desert-rated underlayment, new fascia, seamless gutters, and a 10-year workmanship warranty.</p>
-        <a href="#contact" class="work-link">Start Your Project →</a>
-      </div>
-      <div class="work-img">
-        <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=950&q=88" alt="Henderson home roofing and exterior Las Vegas" loading="lazy" />
+      <div class="work-header-nav">
+        <button class="slider-btn slider-prev" onclick="slideProjects(-1)" aria-label="Previous project">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        </button>
+        <button class="slider-btn slider-next" onclick="slideProjects(1)" aria-label="Next project">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
       </div>
     </div>
 
-    <div class="work-row reveal" style="transition-delay:.2s;margin-top:3px">
-      <div class="work-img">
-        <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=950&q=88" alt="Centennial Hills luxury pool deck outdoor living Las Vegas" loading="lazy" />
-      </div>
-      <div class="work-text">
-        <span class="work-tag">Outdoor Living</span>
-        <h3 class="work-title">Centennial Hills Pool Deck</h3>
-        <p class="work-desc">Custom travertine pool deck, covered patio with integrated LED lighting, and a built-in BBQ island. Engineered to outlast Las Vegas summers.</p>
-        <a href="#contact" class="work-link">Start Your Project →</a>
+    <div class="projects-slider-wrap" id="sliderWrap">
+      <div class="projects-slider" id="projectsSlider">
+
+        <!-- Card 1 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="https://images.unsplash.com/photo-1556909211-36987daf7b4d?auto=format&fit=crop&w=700&q=85" alt="Summerlin kitchen remodel Las Vegas" loading="lazy" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Kitchen &amp; Bath</span>
+            <h3 class="proj-title">Summerlin Kitchen Remodel</h3>
+            <p class="proj-desc">Custom cabinetry, quartz countertops, designer tile backsplash, and all-new appliances. Delivered 3 days ahead of schedule.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="Brand Assets/hero-bg-new.png" alt="Henderson roofing restoration Las Vegas" loading="lazy" style="object-position:center center;" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Roofing &amp; Exterior</span>
+            <h3 class="proj-title">Henderson Roofing Restoration</h3>
+            <p class="proj-desc">Full tile roof replacement on a 3,200 sq ft home. Desert-rated underlayment, new fascia, seamless gutters, 10-year warranty.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=700&q=85" alt="Centennial Hills pool deck outdoor living" loading="lazy" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Outdoor Living</span>
+            <h3 class="proj-title">Centennial Hills Pool Deck</h3>
+            <p class="proj-desc">Custom travertine pool deck, covered patio with integrated LED lighting, and a built-in BBQ island. Built for Las Vegas summers.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="Brand Assets/hero-bg-new.png" alt="North Las Vegas roofing project" loading="lazy" style="object-position:left center;" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Commercial</span>
+            <h3 class="proj-title">North Las Vegas Buildout</h3>
+            <p class="proj-desc">Full tenant improvement for a 4,800 sq ft commercial space — framing, MEP coordination, finishes, and Clark County permit management.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=700&q=85" alt="Summerlin master bath remodel" loading="lazy" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Kitchen &amp; Bath</span>
+            <h3 class="proj-title">Summerlin Master Bath</h3>
+            <p class="proj-desc">Full gut renovation with freestanding soaker tub, walk-in shower, heated floors, and frameless glass enclosure. Spa-grade finishes throughout.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="proj-card">
+          <div class="proj-card-img">
+            <img src="Brand Assets/hero-bg-new.png" alt="Henderson exterior stucco and roofing" loading="lazy" style="object-position:right center;" />
+          </div>
+          <div class="proj-card-body">
+            <span class="proj-tag">Roofing &amp; Exterior</span>
+            <h3 class="proj-title">Henderson Full Exterior</h3>
+            <p class="proj-desc">Complete stucco recoat, new tile roof system, foam insulation layer, and full fascia board replacement. Transformed inside and out.</p>
+            <a href="#contact" class="proj-link">Start Your Project →</a>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div style="text-align:center;margin-top:4.5rem">
+    <!-- Dot navigation -->
+    <div class="slider-dots" id="sliderDots"></div>
+
+    <div style="text-align:center;margin-top:3.5rem">
       <a href="projects.html" class="btn-primary" style="display:inline-block">View All Projects</a>
     </div>
   </section>
@@ -1197,28 +1386,28 @@
   <!-- ░░ LAS VEGAS IMAGE GRID ░░ -->
   <div class="img-grid">
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=700&q=85" alt="Roofing crew at work Las Vegas" loading="lazy" />
+      <img src="Brand Assets/hero-bg-new.png" alt="Roofing project Las Vegas aerial view" loading="lazy" />
       <div class="img-grid-label"><span>Roofing</span>Crew at Work</div>
     </div>
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=700&q=85" alt="Las Vegas luxury home exterior" loading="lazy" />
-      <div class="img-grid-label"><span>Roofing &amp; Exterior</span>Summerlin Residence</div>
+      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=700&q=85" alt="Las Vegas luxury home exterior" loading="lazy" />
+      <div class="img-grid-label"><span>Outdoor Living</span>Summerlin Residence</div>
     </div>
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1601758174114-e711c26e8e63?auto=format&fit=crop&w=700&q=85" alt="Roofing work Las Vegas project" loading="lazy" />
+      <img src="Brand Assets/hero-bg-new.png" alt="Roofing work Las Vegas project" loading="lazy" style="object-position:30% center;" />
       <div class="img-grid-label"><span>Roofing</span>North Las Vegas Project</div>
     </div>
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=700&q=85" alt="Henderson luxury home roofing" loading="lazy" />
-      <div class="img-grid-label"><span>Roofing &amp; Exterior</span>Henderson Project</div>
+      <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=700&q=85" alt="Henderson luxury home exterior" loading="lazy" />
+      <div class="img-grid-label"><span>Home Remodeling</span>Henderson Project</div>
     </div>
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=700&q=85" alt="Las Vegas home roof replacement" loading="lazy" />
+      <img src="Brand Assets/hero-bg-new.png" alt="Las Vegas roof replacement aerial" loading="lazy" style="object-position:70% center;" />
       <div class="img-grid-label"><span>Roof Replacement</span>Centennial Hills</div>
     </div>
     <div class="img-grid-item">
-      <img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=700&q=85" alt="Completed roofing project Las Vegas" loading="lazy" />
-      <div class="img-grid-label"><span>Complete Exterior</span>Summerlin Build</div>
+      <img src="https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=700&q=85" alt="Outdoor living Las Vegas pool deck" loading="lazy" />
+      <div class="img-grid-label"><span>Outdoor Living</span>Summerlin Build</div>
     </div>
   </div>
 
@@ -1309,7 +1498,7 @@
             </div>
             <div>
               <div class="c-label-dark">Service Area</div>
-              <div class="c-value-dark" style="font-size:1.05rem">Las Vegas · Henderson<br>Summerlin · North Las Vegas</div>
+              <div class="c-value-dark" style="font-size:1.5rem;font-weight:700;line-height:1.7;">Las Vegas · Henderson<br>Summerlin · North Las Vegas</div>
             </div>
           </div>
         </div>
@@ -1426,11 +1615,93 @@
         </div>
 
       </div>
+
+    </div>
+
+    <!-- Call + Text CTA row — full-width below grid, properly contained -->
+    <div class="form-cta-row">
+      <a href="tel:5083338415" class="form-cta-call">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        Call Now: (508) 333-8415
+      </a>
+      <a href="sms:5083338415" class="form-cta-text">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Text Us Directly
+      </a>
+    </div>
+
+  </section>
+
+  <!-- ░░ FAQ — QUESTIONS ANSWERED ░░ -->
+  <section class="faq-section">
+    <div class="faq-inner">
+      <div class="faq-header">
+        <p class="s-label" style="color:var(--orange)">Transparency First</p>
+        <h2 class="faq-title">Questions — Answered</h2>
+        <p class="faq-subtitle">We believe in transparency. Here's what clients often ask before starting their projects.</p>
+      </div>
+      <div class="faq-list">
+
+        <div class="faq-item open">
+          <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="true">
+            <span>How long does a typical home extension or roof replacement take in Las Vegas?</span>
+            <div class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </button>
+          <div class="faq-a">
+            <p>Most projects take 10–16 weeks from groundbreaking to completion. In Las Vegas weather, we add 1–2 week buffers for any disruptions — we'd rather be cautious than compromise quality. You'll receive a detailed timeline before we break ground.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+            <span>Are your quotes fixed-price or estimates?</span>
+            <div class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </button>
+          <div class="faq-a">
+            <p>We provide detailed, itemized fixed-price quotes before any work begins — no hidden fees, no surprise invoices. If scope changes mid-project, we discuss it with you first and document every change order. Your budget is protected.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+            <span>Do you handle Clark County permits and inspections?</span>
+            <div class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </button>
+          <div class="faq-a">
+            <p>Yes — 100%. Everlast manages all Clark County permit applications, inspections, and final sign-offs. We know the local approval process inside out, which means fewer delays and zero stress for you. Just let us handle it.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+            <span>How do you handle the Las Vegas heat and disruptive conditions during builds?</span>
+            <div class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </button>
+          <div class="faq-a">
+            <p>Desert conditions are our specialty. Our crews are scheduled around peak heat hours in summer months, we use desert-rated materials, and every project is managed with Las Vegas climate in mind. We've been doing this here since 2010.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+            <span>Can I see examples of similar projects completed in my area?</span>
+            <div class="faq-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+          </button>
+          <div class="faq-a">
+            <p>Absolutely. We have completed projects in Summerlin, Henderson, North Las Vegas, Centennial Hills, and the greater Las Vegas valley. Visit our Projects page or call us and we'll share photos and references specific to your neighborhood and project type.</p>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
   <!-- ░░ FOOTER ░░ -->
   <footer>
+    <div class="footer-bg-wrap" aria-hidden="true">
+      <img src="Brand Assets/hero-bg-new.png" alt="" style="object-position:center center;" />
+      <div class="footer-bg-overlay"></div>
+    </div>
     <div class="footer-main">
 
       <!-- Brand -->
@@ -1720,6 +1991,102 @@
       secs.forEach(s => { if (scrollY >= s.offsetTop - 150) cur = s.id; });
       navAs.forEach(a => { a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--black)' : ''; });
     }, { passive:true });
+
+    /* ── Project Slideshow ───────────────────────────── */
+    (function() {
+      const slider = document.getElementById('projectsSlider');
+      const wrap = document.getElementById('sliderWrap');
+      const dotsContainer = document.getElementById('sliderDots');
+      if (!slider || !wrap) return;
+
+      const cards = slider.querySelectorAll('.proj-card');
+      const total = cards.length;
+      let current = 0;
+      let autoTimer;
+
+      function getVisible() {
+        const w = wrap.offsetWidth;
+        if (w < 640) return 1;
+        if (w < 1100) return 2;
+        return 3;
+      }
+
+      function buildDots() {
+        dotsContainer.innerHTML = '';
+        const pages = total - getVisible() + 1;
+        for (let i = 0; i < pages; i++) {
+          const d = document.createElement('button');
+          d.className = 'slider-dot' + (i === 0 ? ' active' : '');
+          d.setAttribute('aria-label', 'Go to project ' + (i + 1));
+          d.addEventListener('click', () => goTo(i));
+          dotsContainer.appendChild(d);
+        }
+      }
+
+      function updateDots() {
+        dotsContainer.querySelectorAll('.slider-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === current);
+        });
+      }
+
+      function goTo(idx) {
+        const visible = getVisible();
+        const max = total - visible;
+        current = Math.max(0, Math.min(idx, max));
+        const cardW = cards[0].offsetWidth + 24; // 1.5rem gap = 24px
+        slider.style.transform = `translateX(-${current * cardW}px)`;
+        updateDots();
+      }
+
+      window.slideProjects = function(dir) {
+        goTo(current + dir);
+        resetAuto();
+      };
+
+      function resetAuto() {
+        clearInterval(autoTimer);
+        autoTimer = setInterval(() => {
+          const visible = getVisible();
+          const max = total - visible;
+          goTo(current >= max ? 0 : current + 1);
+        }, 4000);
+      }
+
+      // Touch/swipe support
+      let touchX = 0;
+      wrap.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, {passive:true});
+      wrap.addEventListener('touchend', e => {
+        const dx = touchX - e.changedTouches[0].clientX;
+        if (Math.abs(dx) > 50) slideProjects(dx > 0 ? 1 : -1);
+      }, {passive:true});
+
+      // Pause on hover
+      wrap.addEventListener('mouseenter', () => clearInterval(autoTimer));
+      wrap.addEventListener('mouseleave', resetAuto);
+
+      // Recalculate on resize
+      window.addEventListener('resize', () => {
+        buildDots();
+        goTo(current);
+      });
+
+      buildDots();
+      resetAuto();
+    })();
+
+    /* ── FAQ Accordion ───────────────────────────────── */
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      document.querySelectorAll('.faq-q').forEach(b => b.setAttribute('aria-expanded','false'));
+      // Toggle clicked
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+      }
+    }
   </script>
 </body>
 </html>
