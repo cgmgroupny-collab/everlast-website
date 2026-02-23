@@ -231,34 +231,6 @@
     .hero-or { font-size:.8rem; color:rgba(255,255,255,.25); margin:1rem 0 0; display:flex; align-items:center; gap:.8rem; max-width:520px; }
     .hero-or::before,.hero-or::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.1); }
 
-    /* ── Team proof row ── */
-    .hero-team-proof {
-      display:flex; align-items:center; gap:1.2rem;
-      margin-top:2rem;
-    }
-    .proof-avatars { display:flex; }
-    .proof-avatars span {
-      width:38px; height:38px; border-radius:50%;
-      border:2.5px solid rgba(255,255,255,.25);
-      background:linear-gradient(135deg,#4a4a4a,#777);
-      display:flex; align-items:center; justify-content:center;
-      font-size:.62rem; color:#fff; font-weight:700; margin-left:-10px;
-    }
-    .proof-avatars span:first-child { margin-left:0; }
-    .proof-team-text { font-size:.88rem; color:rgba(255,255,255,.6); line-height:1.5; }
-    .proof-team-text strong { color:#fff; display:block; font-weight:600; }
-
-    /* ── Dual rating badges ── */
-    .hero-ratings {
-      display:flex; gap:1.4rem; margin-top:2rem; flex-wrap:wrap;
-    }
-    .rating-block {
-      display:flex; flex-direction:column; gap:.25rem;
-    }
-    .rating-stars { color:var(--orange); font-size:1rem; letter-spacing:2px; }
-    .rating-score { color:#fff; font-size:.88rem; font-weight:600; }
-    .rating-platform { color:rgba(255,255,255,.3); font-size:.68rem; letter-spacing:.12em; text-transform:uppercase; font-weight:600; display:flex; align-items:center; gap:.4rem; }
-    .rating-sep { width:1px; height:40px; background:rgba(255,255,255,.1); align-self:center; }
 
     /* ── Trust strip at very bottom of hero ── */
     .hero-trust-strip {
@@ -308,15 +280,13 @@
     .animate-hero .hero-sub      { opacity:0; transform:translateY(20px); animation:fadeUp .65s var(--ease) forwards .5s; }
     .animate-hero .hero-pill-form { opacity:0; transform:translateY(18px); animation:fadeUp .6s var(--ease) forwards .65s; }
     .animate-hero .hero-or       { opacity:0; animation:fadeUp .5s var(--ease) forwards .8s; }
-    .animate-hero .hero-team-proof { opacity:0; animation:fadeUp .6s var(--ease) forwards .9s; }
-    .animate-hero .hero-ratings  { opacity:0; animation:fadeUp .6s var(--ease) forwards 1.05s; }
-    .animate-hero .hero-trust-strip { opacity:0; animation:fadeUp .6s var(--ease) forwards 1.2s; }
+    .animate-hero .hero-trust-strip { opacity:0; animation:fadeUp .6s var(--ease) forwards .95s; }
     @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
 
     @media (prefers-reduced-motion:reduce) {
       .animate-hero .hero-badge,.animate-hero .hero-title,.animate-hero .hero-sub,
-      .animate-hero .hero-pill-form,.animate-hero .hero-or,.animate-hero .hero-team-proof,
-      .animate-hero .hero-ratings,.animate-hero .hero-trust-strip
+      .animate-hero .hero-pill-form,.animate-hero .hero-or,
+      .animate-hero .hero-trust-strip
       { opacity:1!important;transform:none!important;animation:none!important; }
     }
 
@@ -498,12 +468,12 @@
     .step-title { font-family:'Barlow Condensed',sans-serif; font-size:1.5rem; letter-spacing:.06em; color:var(--black); margin-bottom:.9rem; font-weight:700; text-transform:uppercase; }
     .step-desc { font-size:0.97rem; color:var(--ash); line-height:1.85; }
 
-    /* ━━━━━━━ GET STARTED — MULTI-STEP FORM ━━━━━━━ */
+    /* ━━━━━━━ GET STARTED — TWO-COLUMN FORM ━━━━━━━ */
     #contact {
       background:var(--dark);
       background-image:url('https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=1800&q=88');
       background-size:cover; background-position:center top; background-attachment:fixed;
-      padding:8rem 4rem 5rem;
+      padding:8rem 2rem 7rem;
       position:relative; overflow:hidden;
     }
     #contact::before {
@@ -511,47 +481,106 @@
       background:linear-gradient(135deg, rgba(8,8,8,.97) 0%, rgba(8,8,8,.95) 50%, rgba(8,8,8,.92) 100%);
       pointer-events:none;
     }
-    .contact-grid { display:grid; grid-template-columns:1fr 1.4fr; gap:7rem; align-items:start; position:relative; z-index:1; }
-    .contact-left { }
-    .contact-left .s-label { color:var(--orange); }
-    .contact-left .s-title { color:#fff; }
-    .contact-tagline {
-      font-family:'Barlow',sans-serif; font-style:italic;
-      font-size:clamp(1.05rem,1.5vw,1.25rem); color:rgba(255,255,255,.78);
-      max-width:460px; line-height:1.85; font-weight:500; margin-bottom:3rem;
+
+    /* Two-column wrapper */
+    .contact-center-wrap {
+      max-width:1200px; margin:0 auto;
+      position:relative; z-index:1;
+      display:grid; grid-template-columns:1fr 1.2fr; gap:4rem;
+      align-items:start;
     }
 
-    /* 60-second CTA badge */
+    /* Left column */
+    .contact-left {
+      display:flex; flex-direction:column; gap:2rem;
+      position:sticky; top:120px;
+    }
+
+    /* Section header — left-aligned */
+    .contact-header { text-align:left; }
+    .contact-heading {
+      font-family:'Bebas Neue',sans-serif;
+      font-size:clamp(3.4rem,5.5vw,5.5rem);
+      letter-spacing:.03em; color:#fff; line-height:.95;
+      margin-bottom:.5rem;
+    }
+    .contact-tagline {
+      font-family:'Barlow',sans-serif; font-style:italic;
+      font-size:clamp(1rem,1.4vw,1.15rem); color:rgba(255,255,255,.55);
+      max-width:440px; line-height:1.85; font-weight:500;
+      margin:1.2rem 0 0;
+    }
+
+    /* 60-second badge */
     .sixty-sec-badge {
       display:inline-flex; align-items:center; gap:.8rem;
       background:rgba(255,129,14,.12); border:1px solid rgba(255,129,14,.3);
-      padding:.75rem 1.4rem; border-radius:40px; margin-bottom:3rem;
+      padding:.75rem 1.4rem; border-radius:40px;
     }
     .sixty-sec-badge svg { flex-shrink:0; }
     .sixty-sec-badge span { font-size:0.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--orange); font-weight:700; }
 
-    /* Contact details in dark section */
-    .contact-details-dark { display:flex; flex-direction:column; gap:2rem; }
-    .c-item-dark { display:flex; gap:1.3rem; align-items:flex-start; }
-    .c-icon-dark { width:48px; height:48px; border:1.5px solid rgba(255,129,14,.3); background:rgba(255,129,14,.08); display:flex; align-items:center; justify-content:center; flex-shrink:0; border-radius:4px; }
-    .c-label-dark { font-size:0.62rem; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:.35rem; font-weight:700; }
-    .c-value-dark { font-size:1.3rem; color:#fff; font-weight:600; }
-    .c-value-dark a { color:#fff; transition:color .2s; }
-    .c-value-dark a:hover { color:var(--orange); }
-    .c-sub-dark { font-size:.85rem; color:rgba(255,255,255,.35); margin-top:.15rem; }
-
-    /* Call now prominent */
-    .contact-call-btn {
-      display:inline-flex; align-items:center; gap:.8rem;
-      margin-top:2.5rem;
-      animation:callGlow 2.4s ease-in-out infinite;
-      background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00,#FF810E,#ff4e00);
-      background-size:300% 300%;
-      color:#fff; padding:1.1rem 2.4rem; border-radius:4px;
-      font-weight:700; font-size:1rem; letter-spacing:.06em;
-      border:none; cursor:pointer;
+    /* Vertical contact info — left column */
+    .contact-info-vert {
+      display:flex; flex-direction:column; gap:1.3rem;
+      margin-top:.5rem;
     }
-    .contact-call-btn:hover { transform:translateY(-3px) scale(1.02); }
+    .civ-item {
+      display:flex; align-items:center; gap:1rem;
+    }
+    .civ-icon {
+      width:42px; height:42px; border-radius:50%; flex-shrink:0;
+      background:rgba(255,129,14,.1); border:1.5px solid rgba(255,129,14,.3);
+      display:flex; align-items:center; justify-content:center;
+    }
+    .civ-text { font-size:1rem; color:rgba(255,255,255,.85); font-weight:600; line-height:1.4; }
+    .civ-text a { color:rgba(255,255,255,.85); text-decoration:none; transition:color .2s; }
+    .civ-text a:hover { color:var(--orange); }
+    .civ-sub { font-size:.85rem; color:rgba(255,255,255,.35); font-weight:400; }
+
+    /* Left column CTA button */
+    .contact-left-cta {
+      display:inline-flex; align-items:center; gap:.7rem;
+      padding:1rem 2rem; border-radius:4px;
+      font-family:'Barlow Condensed',sans-serif; font-size:.95rem;
+      letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+      text-decoration:none; color:#fff; align-self:flex-start;
+      background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);
+      background-size:300%;
+      animation:callGlow 2.4s ease-in-out infinite;
+      transition:all .3s var(--ease);
+    }
+    .contact-left-cta:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(255,129,14,.5); }
+
+    /* Right column — form fills it */
+    .contact-right { width:100%; }
+    .contact-right .multistep-form { width:100%; }
+
+    /* Bottom CTA row — spans full width below the two columns */
+    .contact-bottom-cta {
+      grid-column:1 / -1;
+      display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+      margin-top:2rem;
+    }
+    .ca-btn {
+      display:inline-flex; align-items:center; gap:.7rem;
+      padding:1.1rem 2.6rem; border-radius:4px;
+      font-family:'Barlow Condensed',sans-serif; font-size:1.05rem;
+      letter-spacing:.14em; text-transform:uppercase; font-weight:700;
+      transition:all .3s var(--ease); text-decoration:none; justify-content:center;
+      min-width:180px;
+    }
+    .ca-btn-primary {
+      background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);
+      background-size:300%; color:#fff; border:none;
+      animation:callGlow 2.4s ease-in-out infinite;
+    }
+    .ca-btn-primary:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(255,129,14,.5); }
+    .ca-btn-outline {
+      background:transparent; color:rgba(255,255,255,.8);
+      border:1.5px solid rgba(255,255,255,.22);
+    }
+    .ca-btn-outline:hover { border-color:var(--orange); color:#fff; background:rgba(255,129,14,.08); transform:translateY(-2px); }
 
     /* Multi-step form */
     .multistep-form {
@@ -729,6 +758,7 @@
     .reveal-x.from-left { transform:translateX(-32px); }
 
     /* ━━━━━━━ RESPONSIVE ━━━━━━━ */
+    /* ━━━━━━━ TABLET ≤1100px ━━━━━━━ */
     @media (max-width:1100px) {
       nav { padding:0 2rem; }
       nav.nav-scrolled { height:72px; }
@@ -744,10 +774,19 @@
       .img-grid { grid-template-columns:1fr 1fr; }
       .process-grid { grid-template-columns:1fr 1fr; gap:2rem; }
       .process-connector { display:none; }
-      .contact-grid { grid-template-columns:1fr; gap:3rem; }
       .form-row-dark { grid-template-columns:1fr; }
       section { padding:5rem 2rem; }
+      /* Contact section — single column, centered */
       #contact { padding:5rem 2rem; background-attachment:scroll; }
+      .contact-center-wrap { grid-template-columns:1fr; gap:2.5rem; max-width:640px; }
+      .contact-left { position:static; align-items:center; text-align:center; }
+      .contact-header { text-align:center; }
+      .contact-tagline { margin:1.2rem auto 0; text-align:center; }
+      .sixty-sec-badge { margin:1.4rem auto 0 !important; }
+      .contact-info-vert { align-items:center; }
+      .contact-left-cta { align-self:center; }
+      .contact-bottom-cta { flex-direction:column; align-items:center; }
+      .ca-btn { max-width:100%; width:100%; }
       .img-break-content { padding:0 2.5rem; }
       .footer-main { grid-template-columns:1fr 1fr; gap:3rem; padding:4rem 2rem 3rem; }
       .footer-bottom { padding:1.5rem 2rem; flex-direction:column; text-align:center; }
@@ -755,34 +794,77 @@
       /* Slideshow tablet: 2 cards */
       .proj-card { min-width:calc(50% - .75rem); }
       .work-header { flex-direction:column; align-items:flex-start; gap:2rem; }
-      /* Form CTA row */
-      .form-cta-row { flex-direction:column; }
-      .form-cta-call, .form-cta-text { justify-content:center; width:100%; }
       /* FAQ */
       .faq-section { padding:5rem 2rem; }
     }
+
+    /* ━━━━━━━ MOBILE ≤640px ━━━━━━━ */
     @media (max-width:640px) {
-      nav { height:68px; }
-      .nav-logo img { width:180px; height:48px; }
+      nav { height:68px; padding:0 1.2rem; }
+      .nav-logo img { width:170px; height:46px; }
       .services-grid { grid-template-columns:1fr; }
       .process-grid { grid-template-columns:1fr; }
       .img-grid { grid-template-columns:1fr; }
+      section { padding:3.5rem 1.2rem; }
+
+      /* Hero — mobile */
       .hero-worker-wrap { display:none; }
       .hero-bg-overlay { background:rgba(10,10,10,.88); }
-      .hero-content { padding:0 1.5rem 2rem; }
-      .hero-trust-strip { padding:1rem 1.5rem; }
-      .hero-pill-form { flex-direction:column; border-radius:8px; }
+      .hero-content { padding:0 1.2rem 1.5rem; text-align:center; }
+      .hero-badge { margin:0 auto 1.8rem; }
+      .hero-title { text-align:center; }
+      .hero-sub { text-align:center; margin-left:auto; margin-right:auto; }
+      .hero-pill-form { flex-direction:column; border-radius:8px; max-width:100%; margin:2rem auto 0; }
       .hero-pill-btn { border-radius:0 0 6px 6px; text-align:center; justify-content:center; }
+      .hero-or { justify-content:center; max-width:100%; }
+      .btn-call-now { width:100%; justify-content:center; }
+      .hero-trust-strip { padding:1rem 1.2rem; gap:1rem; justify-content:center; text-align:center; flex-direction:column; align-items:center; }
+      .trust-strip-items { justify-content:center; }
+
+      /* Services */
+      .services-header { text-align:center; justify-content:center; }
+      .services-header .s-desc { text-align:center; margin:0 auto; }
+      .svc-body { padding:2rem 1.6rem 2.2rem; }
+
+      /* Image break */
+      .img-break { height:400px; }
+      .img-break-content { padding:0 1.5rem; }
+      .img-break-title { font-size:clamp(2.5rem,8vw,3.5rem); }
+
+      /* Why section */
+      .why-photo-wrap img { height:260px; }
+
+      /* Contact form section — mobile */
+      #contact { padding:3.5rem 1.2rem; }
+      .contact-center-wrap { gap:2rem; max-width:100%; }
+      .contact-heading { font-size:clamp(2.8rem,10vw,3.8rem); }
+      .contact-tagline { font-size:.95rem; max-width:100%; }
+      .contact-info-vert { gap:1rem; }
+      .civ-icon { width:38px; height:38px; }
+      .civ-text { font-size:.9rem; }
+      .contact-left-cta { width:100%; justify-content:center; font-size:.85rem; padding:.9rem 1.5rem; }
+      .multistep-form { padding:1.8rem 1.2rem; }
+      .form-step-title { font-size:1.6rem; }
       .service-options { grid-template-columns:1fr; }
-      .footer-main { grid-template-columns:1fr; }
-      .multistep-form { padding:2rem 1.4rem; }
-      .contact-grid { gap:2.5rem; }
-      /* Slideshow mobile: 1 card */
+      .svc-opt { padding:1rem 1.1rem; }
+      .ca-btn { max-width:100%; min-width:unset; padding:.95rem 1.5rem; font-size:.9rem; }
+      .contact-bottom-cta { margin-top:1.5rem; }
+
+      /* Project slideshow mobile */
       .proj-card { min-width:calc(100% - 0px); }
       .proj-card-img { height:240px; }
+      .proj-card-body { padding:1.6rem 1.4rem; }
+
+      /* Process section */
+      .proc-step { padding:2rem 1.5rem; }
+
       /* FAQ mobile */
       .faq-q span { font-size:1.05rem; }
-      .faq-section { padding:4rem 1.5rem; }
+      .faq-section { padding:3.5rem 1.2rem; }
+
+      /* Footer mobile */
+      .footer-main { grid-template-columns:1fr; padding:3rem 1.2rem 2rem; }
+      .footer-bottom { padding:1.2rem; }
     }
 
     /* ━━━━━━━ PROJECT SLIDESHOW ━━━━━━━ */
@@ -826,32 +908,7 @@
     .slider-dot { width:8px; height:8px; border-radius:50%; background:rgba(0,0,0,.15); border:none; cursor:pointer; transition:all .3s; padding:0; }
     .slider-dot.active { background:var(--orange); width:28px; border-radius:4px; }
 
-    /* ━━━━━━━ FORM CTA ROW ━━━━━━━ */
-    .form-cta-row {
-      display:flex; gap:1rem; margin-top:3.5rem;
-      justify-content:center; align-items:center;
-      position:relative; z-index:1;
-      border-top:1px solid rgba(255,255,255,.07);
-      padding-top:2.5rem;
-    }
-    .form-cta-call, .form-cta-text {
-      display:inline-flex; align-items:center; gap:.7rem;
-      padding:1.1rem 2.4rem; border-radius:4px;
-      font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; letter-spacing:.12em; text-transform:uppercase; font-weight:700;
-      transition:all .3s var(--ease); text-decoration:none;
-    }
-    .form-cta-call {
-      background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);
-      color:#fff; border:none;
-      animation:callGlow 2.4s ease-in-out infinite;
-      background-size:300% 300%;
-    }
-    .form-cta-call:hover { transform:translateY(-3px); box-shadow:0 12px 32px rgba(255,129,14,.5); }
-    .form-cta-text {
-      background:transparent; color:rgba(255,255,255,.8);
-      border:1.5px solid rgba(255,255,255,.25);
-    }
-    .form-cta-text:hover { border-color:rgba(255,255,255,.6); color:#fff; background:rgba(255,255,255,.06); transform:translateY(-2px); }
+    /* (form-cta-row removed — replaced by .contact-bottom-cta) */
 
     /* ━━━━━━━ FAQ SECTION ━━━━━━━ */
     .faq-section {
@@ -1026,38 +1083,6 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
           Call Now: (508) 333-8415
         </a>
-
-        <!-- Team proof -->
-        <div class="hero-team-proof">
-          <div class="proof-avatars" aria-hidden="true">
-            <span>JR</span><span>MD</span><span>TK</span><span>SV</span><span>+</span>
-          </div>
-          <div class="proof-team-text">
-            <strong>15+ Specialists on Every Project</strong>
-            Dedicated to Your Project's Success
-          </div>
-        </div>
-
-        <!-- Dual ratings -->
-        <div class="hero-ratings">
-          <div class="rating-block">
-            <div class="rating-stars">★★★★★</div>
-            <div class="rating-score">4.9/5 (500+ Reviews)</div>
-            <div class="rating-platform">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-              Google Reviews
-            </div>
-          </div>
-          <div class="rating-sep" aria-hidden="true"></div>
-          <div class="rating-block">
-            <div class="rating-stars">★★★★★</div>
-            <div class="rating-score">4.8/5 (200+ Reviews)</div>
-            <div class="rating-platform">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="#FF1A1A"><path d="M21.111 9.775C21.111 5.078 16.961 1 12 1S2.889 5.078 2.889 9.775c0 4.058 2.988 7.442 6.974 8.3l2.137 4.925 2.137-4.925c3.986-.858 6.974-4.242 6.974-8.3z"/></svg>
-              Yelp
-            </div>
-          </div>
-        </div>
 
       </div>
     </div>
@@ -1455,64 +1480,53 @@
     </div>
   </section>
 
-  <!-- ░░ GET STARTED — MULTI-STEP ANIMATED FORM ░░ -->
+  <!-- ░░ GET STARTED — TWO-COLUMN FORM ░░ -->
   <section id="contact">
-    <div class="contact-grid">
+    <div class="contact-center-wrap">
 
-      <!-- Left: Info -->
-      <div class="contact-left reveal-x from-left">
-        <p class="s-label">Get Started</p>
-        <h2 class="s-title" style="color:#fff">Your Professional<br>Quote Awaits.</h2>
-
-        <div class="sixty-sec-badge">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          <span>Find out in less than 60 seconds</span>
+      <!-- Left column — heading + contact info -->
+      <div class="contact-left reveal">
+        <div class="contact-header">
+          <p class="s-label" style="color:var(--orange);">Get Started</p>
+          <h2 class="contact-heading">Your Professional<br>Quote Awaits.</h2>
+          <div class="sixty-sec-badge" style="margin:1.8rem 0 0;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Find out in less than 60 seconds</span>
+          </div>
+          <p class="contact-tagline">No obligation. Just a straight conversation about your project and what it'll take to get it done right — by Las Vegas's most trusted general contractor.</p>
         </div>
 
-        <p class="contact-tagline">No obligation. Just a straight conversation about your project and what it'll take to get it done right — by Las Vegas's most trusted general contractor.</p>
-
-        <div class="contact-details-dark">
-          <div class="c-item-dark">
-            <div class="c-icon-dark">
+        <div class="contact-info-vert">
+          <div class="civ-item">
+            <div class="civ-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF810E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
             </div>
-            <div>
-              <div class="c-label-dark">Call or Text Direct</div>
-              <div class="c-value-dark"><a href="tel:5083338415">(508) 333-8415</a></div>
-              <div class="c-sub-dark">Available Mon–Sat, 7am–6pm</div>
-            </div>
+            <div class="civ-text"><a href="tel:5083338415">(508) 333-8415</a></div>
           </div>
-          <div class="c-item-dark">
-            <div class="c-icon-dark">
+          <div class="civ-item">
+            <div class="civ-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF810E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
             </div>
-            <div>
-              <div class="c-label-dark">Email Us</div>
-              <div class="c-value-dark"><a href="mailto:everlastgcus@gmail.com">everlastgcus@gmail.com</a></div>
-              <div class="c-sub-dark">We reply within 2 hours</div>
-            </div>
+            <div class="civ-text"><a href="mailto:everlastgcus@gmail.com">everlastgcus@gmail.com</a></div>
           </div>
-          <div class="c-item-dark">
-            <div class="c-icon-dark">
+          <div class="civ-item">
+            <div class="civ-icon">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF810E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
-            <div>
-              <div class="c-label-dark">Service Area</div>
-              <div class="c-value-dark" style="font-size:1.5rem;font-weight:700;line-height:1.7;">Las Vegas · Henderson<br>Summerlin · North Las Vegas</div>
-            </div>
+            <div class="civ-text">Las Vegas · Henderson<br><span class="civ-sub">Summerlin · North Las Vegas</span></div>
           </div>
         </div>
 
-        <a href="tel:5083338415" class="contact-call-btn" style="margin-top:2.8rem;display:inline-flex" aria-label="Call Everlast now">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+        <a href="tel:5083338415" class="contact-left-cta">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
           Call Now: (508) 333-8415
         </a>
       </div>
 
-      <!-- Right: Multi-step form -->
-      <div class="multistep-form reveal">
+      <!-- Right column — Multi-step form -->
+      <div class="contact-right">
+      <div class="multistep-form reveal" style="transition-delay:.15s">
 
-        <!-- Progress -->
         <div class="form-steps-header">
           <span id="step-label" class="step-current">Step 1 of 3</span>
           <span id="step-hint">Select your service</span>
@@ -1521,7 +1535,7 @@
           <div class="form-progress-fill" id="form-progress" style="width:33%"></div>
         </div>
 
-        <!-- Step 1: Service Selection -->
+        <!-- Step 1 -->
         <div class="form-step active" id="step-1">
           <div class="form-step-title">What Can We Help With?</div>
           <p class="form-step-sub">Select all that apply — we handle every trade under one roof.</p>
@@ -1549,7 +1563,7 @@
           </div>
         </div>
 
-        <!-- Step 2: Project Details -->
+        <!-- Step 2 -->
         <div class="form-step" id="step-2">
           <div class="form-step-title">Tell Us About Your Project</div>
           <p class="form-step-sub">A few quick details help us prepare your personalized quote.</p>
@@ -1558,26 +1572,12 @@
               <label>Project Description</label>
               <textarea id="f-desc" placeholder="Briefly describe what you're looking to have done..." rows="3"></textarea>
             </div>
-            <div class="fdark">
-              <label>When Do You Want to Start?</label>
-            </div>
+            <div class="fdark"><label>When Do You Want to Start?</label></div>
             <div class="timeline-opts">
-              <div class="timeline-opt" data-val="ASAP" onclick="selectTimeline(this)">
-                <span class="timeline-opt-label">As soon as possible</span>
-                <div class="timeline-opt-check"></div>
-              </div>
-              <div class="timeline-opt" data-val="1-3 months" onclick="selectTimeline(this)">
-                <span class="timeline-opt-label">Within 1–3 months</span>
-                <div class="timeline-opt-check"></div>
-              </div>
-              <div class="timeline-opt" data-val="3-6 months" onclick="selectTimeline(this)">
-                <span class="timeline-opt-label">3–6 months out</span>
-                <div class="timeline-opt-check"></div>
-              </div>
-              <div class="timeline-opt" data-val="Just exploring" onclick="selectTimeline(this)">
-                <span class="timeline-opt-label">Just exploring options</span>
-                <div class="timeline-opt-check"></div>
-              </div>
+              <div class="timeline-opt" data-val="ASAP" onclick="selectTimeline(this)"><span class="timeline-opt-label">As soon as possible</span><div class="timeline-opt-check"></div></div>
+              <div class="timeline-opt" data-val="1-3 months" onclick="selectTimeline(this)"><span class="timeline-opt-label">Within 1–3 months</span><div class="timeline-opt-check"></div></div>
+              <div class="timeline-opt" data-val="3-6 months" onclick="selectTimeline(this)"><span class="timeline-opt-label">3–6 months out</span><div class="timeline-opt-check"></div></div>
+              <div class="timeline-opt" data-val="Just exploring" onclick="selectTimeline(this)"><span class="timeline-opt-label">Just exploring options</span><div class="timeline-opt-check"></div></div>
             </div>
           </div>
           <div class="form-nav">
@@ -1586,7 +1586,7 @@
           </div>
         </div>
 
-        <!-- Step 3: Contact Info -->
+        <!-- Step 3 -->
         <div class="form-step" id="step-3">
           <div class="form-step-title">Almost Done!</div>
           <p class="form-step-sub">Where should we send your professional quote?</p>
@@ -1598,10 +1598,10 @@
             <div class="fdark"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="(702) 000-0000" autocomplete="tel" /></div>
             <div class="fdark"><label>Email Address</label><input type="email" id="f-email" placeholder="you@email.com" autocomplete="email" /></div>
           </div>
-          <p style="font-size:.75rem;color:rgba(255,255,255,.2);margin-top:1rem;line-height:1.7">Your info is private. We'll only use it to send your quote and follow up about your project.</p>
+          <p style="font-size:.82rem;color:rgba(255,255,255,.25);margin-top:1rem;line-height:1.7">Your info is private. We'll only use it to send your quote and follow up about your project.</p>
           <div class="form-nav">
             <button type="button" class="form-nav-back" onclick="prevStep(2)">← Back</button>
-            <button type="button" class="form-nav-next" onclick="submitMultiForm()" style="background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);background-size:200%;animation:callGlow 2s ease infinite;">Get My Free Quote Now →</button>
+            <button type="button" class="form-nav-next" onclick="submitMultiForm()" style="background:linear-gradient(135deg,#ff4e00,#FF810E,#ff9d00);background-size:200%;animation:callGlow 2s ease infinite;">Submit My Request →</button>
           </div>
         </div>
 
@@ -1614,22 +1614,22 @@
           <p>We received your request and will be in touch within 2 hours.<br>Or call us now at <a href="tel:5083338415" style="color:var(--orange)">(508) 333-8415</a>.</p>
         </div>
 
+      </div><!-- end multistep-form -->
+      </div><!-- end contact-right -->
+
+      <!-- Bottom CTA row — spans both columns -->
+      <div class="contact-bottom-cta reveal" style="transition-delay:.35s">
+        <a href="tel:5083338415" class="ca-btn ca-btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+          Call Now: (508) 833-8415
+        </a>
+        <a href="sms:5083338415" class="ca-btn ca-btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Text Us Directly
+        </a>
       </div>
 
-    </div>
-
-    <!-- Call + Text CTA row — full-width below grid, properly contained -->
-    <div class="form-cta-row">
-      <a href="tel:5083338415" class="form-cta-call">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-        Call Now: (508) 333-8415
-      </a>
-      <a href="sms:5083338415" class="form-cta-text">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Text Us Directly
-      </a>
-    </div>
-
+    </div><!-- end contact-center-wrap -->
   </section>
 
   <!-- ░░ FAQ — QUESTIONS ANSWERED ░░ -->
