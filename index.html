@@ -681,10 +681,60 @@
     .reveal-x.visible { opacity:1; transform:translateX(0); }
     .reveal-x.from-left { transform:translateX(-32px); }
 
+    /* ━━━━━━━ HAMBURGER & MOBILE NAV ━━━━━━━ */
+    .hamburger-btn {
+      display:none; flex-direction:column; justify-content:center; gap:5px;
+      width:40px; height:40px; cursor:pointer; background:none; border:none; padding:5px; z-index:201; flex-shrink:0;
+    }
+    .hamburger-btn span { display:block; width:24px; height:2.5px; background:#fff; border-radius:2px; transition:all .3s ease; }
+    nav.nav-scrolled .hamburger-btn span { background:var(--black); }
+    .hamburger-btn.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .hamburger-btn.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
+    .hamburger-btn.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    .mobile-nav {
+      position:fixed; top:0; left:0; right:0; background:var(--dark);
+      z-index:199; padding:88px 1.8rem 2rem;
+      transform:translateY(-110%);
+      transition:transform .4s cubic-bezier(.625,.05,0,1);
+      border-bottom:2px solid var(--orange);
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
+    .mobile-nav.open { transform:translateY(0); }
+    .mobile-nav ul { list-style:none; display:flex; flex-direction:column; }
+    .mobile-nav ul li a {
+      display:block; padding:.95rem 0;
+      font-size:1.5rem; font-family:'Bebas Neue',sans-serif; letter-spacing:.06em;
+      color:rgba(255,255,255,.7); border-bottom:1px solid rgba(255,255,255,.07);
+      transition:color .2s, padding-left .2s;
+    }
+    .mobile-nav ul li a:hover { color:var(--orange); padding-left:.5rem; }
+    .mobile-nav-ctas { display:flex; flex-direction:column; gap:.7rem; margin-top:1.4rem; }
+    .mobile-nav-signin {
+      display:block; text-align:center; padding:.85rem;
+      border:1.5px solid var(--orange); border-radius:5px; color:var(--orange);
+      font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:.2em;
+      text-transform:uppercase; font-weight:700; transition:all .2s;
+    }
+    .mobile-nav-signin:hover { background:var(--orange); color:#fff; }
+    .mobile-nav-estimate {
+      display:block; text-align:center; padding:.85rem;
+      background:var(--orange); border-radius:5px; color:#fff;
+      font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:.2em;
+      text-transform:uppercase; font-weight:700; transition:background .2s;
+    }
+    .mobile-nav-estimate:hover { background:var(--orange-lt); }
+    .mobile-nav-overlay {
+      position:fixed; inset:0; background:rgba(0,0,0,.55);
+      z-index:198; opacity:0; pointer-events:none; transition:opacity .3s ease;
+    }
+    .mobile-nav-overlay.show { opacity:1; pointer-events:all; }
+
     /* ━━━━━━━ RESPONSIVE ━━━━━━━ */
     /* ━━━━━━━ TABLET ≤1100px ━━━━━━━ */
     @media (max-width:1100px) {
       nav { padding:0 2rem; }
+      .hamburger-btn { display:flex; }
       nav.nav-scrolled { height:72px; }
       .nav-logo img { width:200px; height:54px; }
       .nav-links { display:none; }
@@ -919,6 +969,23 @@
     </a>
   </div>
 
+  <!-- ░░ MOBILE NAV OVERLAY ░░ -->
+  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
+
+  <!-- ░░ MOBILE NAV DRAWER ░░ -->
+  <div class="mobile-nav" id="mobile-nav">
+    <ul>
+      <li><a href="#services" onclick="closeMobileNav()">Services</a></li>
+      <li><a href="#why" onclick="closeMobileNav()">Why Us</a></li>
+      <li><a href="#work" onclick="closeMobileNav()">Our Work</a></li>
+      <li><a href="projects.html" onclick="closeMobileNav()">Projects</a></li>
+    </ul>
+    <div class="mobile-nav-ctas">
+      <a href="partner-login.html" class="mobile-nav-signin">Sign In to Portal</a>
+      <a href="#contact" class="mobile-nav-estimate" onclick="closeMobileNav()">Get Free Estimate</a>
+    </div>
+  </div>
+
   <!-- ░░ NAV ░░ -->
   <nav>
     <a href="index.html" class="nav-logo" aria-label="Everlast General Contracting">
@@ -932,6 +999,12 @@
       <li><a href="partner-login.html" class="nav-signin">Sign In</a></li>
       <li><a href="#contact" class="nav-cta">Free Estimate</a></li>
     </ul>
+    <!-- Hamburger (mobile only) -->
+    <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" onclick="toggleMobileNav()">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
   </nav>
 
   <!-- ░░ HERO ░░ -->
@@ -1650,6 +1723,32 @@
     }
     window.addEventListener('scroll', updateNav, { passive:true });
     updateNav();
+
+    /* ── Mobile nav toggle ──────────────────────────── */
+    function toggleMobileNav() {
+      const btn = document.getElementById('hamburger-btn');
+      const nav = document.getElementById('mobile-nav');
+      const overlay = document.getElementById('mobile-nav-overlay');
+      const isOpen = nav.classList.contains('open');
+      if (isOpen) {
+        closeMobileNav();
+      } else {
+        btn.classList.add('open');
+        nav.classList.add('open');
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+    function closeMobileNav() {
+      document.getElementById('hamburger-btn').classList.remove('open');
+      document.getElementById('mobile-nav').classList.remove('open');
+      document.getElementById('mobile-nav-overlay').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    // Close on scroll (user scrolled past the menu)
+    window.addEventListener('scroll', () => {
+      if (document.getElementById('mobile-nav').classList.contains('open')) closeMobileNav();
+    }, { passive:true });
 
     /* ── Hero entry animations ──────────────────────── */
     const hero = document.querySelector('.hero');
