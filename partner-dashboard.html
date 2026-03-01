@@ -1245,7 +1245,11 @@ function showView(viewId, title, el) {
   if (el) el.classList.add('active');
   document.getElementById('topbar-title').textContent = title;
   closeSidebar();
-  if (viewId === 'partners') renderPartners();
+  if (viewId === 'partners') {
+    // Partners view is admin-only — redirect non-admins away immediately
+    if (!_isAdmin) { showView('overview','Dashboard',document.querySelector('[data-view="overview"]')); return; }
+    renderPartners();
+  }
   if (viewId === 'reports')  renderReports();
   if (viewId === 'labor')    renderLabor();
   if (viewId === 'upload')   populateUploadSelector();
@@ -1548,6 +1552,7 @@ function renderLabor() {
 
 // ═══════════ PARTNERS VIEW (admin) ═══════════
 function renderPartners() {
+  if (!_isAdmin) return; // hard block — non-admins cannot execute this function
   const partners = getPartnerPartners();
   const allProjects = dbGet('ev_db_projects');
   const allInvoices = dbGet('ev_db_invoices');
@@ -1860,6 +1865,16 @@ if (_isAdmin) {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
       Partners
     </div>`;
+} else {
+  // Partner user — remove the Partners view from the DOM entirely so
+  // the HTML is never accessible, even via browser dev tools inspection
+  const pvEl = document.getElementById('view-partners');
+  if (pvEl) pvEl.remove();
+  // Also remove the admin modals from the DOM
+  ['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
+    const m = document.getElementById(id);
+    if (m) m.remove();
+  });
 }
 
 // Close admin modals on overlay click
