@@ -207,6 +207,7 @@
       border-radius: 50%;
       border: 1.5px solid #fff;
     }
+    .topbar-user-wrap { position: relative; }
     .topbar-user {
       display: flex;
       align-items: center;
@@ -229,7 +230,45 @@
       justify-content: center;
     }
     .topbar-user-name { font-size: .85rem; font-weight: 600; }
-    .topbar-user svg { width: 14px; height: 14px; color: var(--ash); }
+    .topbar-user svg { width: 14px; height: 14px; color: var(--ash); transition: transform .2s; }
+    .topbar-user-wrap.open .topbar-user svg { transform: rotate(180deg); }
+    .topbar-user-dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      min-width: 180px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.1);
+      overflow: hidden;
+      z-index: 200;
+    }
+    .topbar-user-wrap.open .topbar-user-dropdown { display: block; }
+    .topbar-dropdown-info {
+      padding: .75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: .8rem;
+      color: var(--ash);
+      line-height: 1.4;
+    }
+    .topbar-dropdown-info strong { display: block; color: var(--ink); font-size: .85rem; }
+    .topbar-dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .65rem 1rem;
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+      transition: background .15s;
+    }
+    .topbar-dropdown-item:hover { background: var(--bg); }
+    .topbar-dropdown-item svg { width: 15px; height: 15px; color: var(--ash); }
+    .topbar-dropdown-item.signout { color: #e53e3e; }
+    .topbar-dropdown-item.signout svg { color: #e53e3e; }
 
     /* ── Content ── */
     .portal-content { flex: 1; padding: 2rem 2.2rem; }
@@ -869,10 +908,26 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
           <span class="notif-dot"></span>
         </div>
-        <div class="topbar-user">
-          <div class="topbar-user-avatar">MR</div>
-          <span class="topbar-user-name">Marcus R.</span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"/></svg>
+        <div class="topbar-user-wrap" id="topbar-user-wrap">
+          <div class="topbar-user" onclick="toggleUserDropdown()">
+            <div class="topbar-user-avatar">MR</div>
+            <span class="topbar-user-name">Marcus R.</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6,9 12,15 18,9"/></svg>
+          </div>
+          <div class="topbar-user-dropdown">
+            <div class="topbar-dropdown-info">
+              <strong class="topbar-user-fullname">Everlast Admin</strong>
+              <span class="topbar-user-email">admin@everlastgc.com</span>
+            </div>
+            <div class="topbar-dropdown-item" onclick="toggleUserDropdown(); showView('overview','Dashboard',null)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </div>
+            <div class="topbar-dropdown-item signout" onclick="doSignOut()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Sign Out
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1404,6 +1459,19 @@ function toggleSidebar() {
 function closeSidebar() {
   document.getElementById('portal-sidebar').classList.remove('open');
   document.getElementById('sidebar-overlay').classList.remove('show');
+}
+function toggleUserDropdown() {
+  document.getElementById('topbar-user-wrap').classList.toggle('open');
+}
+// Close dropdown when clicking outside
+document.addEventListener('click', e => {
+  const wrap = document.getElementById('topbar-user-wrap');
+  if (wrap && !wrap.contains(e.target)) wrap.classList.remove('open');
+});
+async function doSignOut() {
+  await sb.auth.signOut();
+  sessionStorage.removeItem('ev_user');
+  window.location.href = 'partner-login.html';
 }
 
 // ═══════════ STATUS HELPERS ═══════════
@@ -2190,6 +2258,8 @@ async function init() {
   document.querySelectorAll('.partner-co').forEach(el => el.textContent = _session.company);
   document.querySelectorAll('.partner-avatar, .topbar-user-avatar').forEach(el => el.textContent = _session.initials);
   document.querySelectorAll('.topbar-user-name').forEach(el => el.textContent = _session.name.split(' ')[0] + ' ' + (_session.name.split(' ')[1]?.[0]||'') + '.');
+  document.querySelectorAll('.topbar-user-fullname').forEach(el => el.textContent = _session.name);
+  document.querySelectorAll('.topbar-user-email').forEach(el => el.textContent = _session.email);
   const greetEl = document.getElementById('overview-greeting');
   if (greetEl) greetEl.textContent = `Welcome back, ${_session.name.split(' ')[0]}. Here's what's happening with your projects today.`;
 
