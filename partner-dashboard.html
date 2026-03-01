@@ -662,6 +662,55 @@
     }
     .sidebar-overlay.show { display: block; }
 
+    /* ── Empty states ── */
+    .empty-state { text-align:center; padding:4rem 2rem; color:var(--ash); }
+    .empty-state svg { width:48px;height:48px;margin:0 auto 1rem;opacity:.3; }
+    .empty-state h3 { font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.04em;color:var(--black);margin-bottom:.5rem;opacity:.5; }
+    .empty-state p { font-size:.88rem;line-height:1.7;max-width:340px;margin:0 auto; }
+
+    /* ── Admin "add" button ── */
+    .admin-add-btn {
+      display:inline-flex;align-items:center;gap:.5rem;
+      background:var(--orange);color:#fff;border:none;
+      padding:.55rem 1.2rem;border-radius:6px;cursor:pointer;
+      font-family:'Barlow Condensed',sans-serif;font-size:.72rem;
+      letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+      transition:all .2s;
+    }
+    .admin-add-btn:hover{background:var(--orange-lt);transform:translateY(-1px);}
+    .admin-add-btn svg{width:14px;height:14px;}
+    .view-header-row{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.8rem;flex-wrap:wrap;}
+    .view-header-row .view-header{margin-bottom:0;}
+
+    /* ── Partner cards (admin Partners view) ── */
+    .partners-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;margin-bottom:2rem;}
+    .partner-card{background:var(--white);border-radius:10px;border:1px solid var(--border);overflow:hidden;transition:box-shadow .25s;}
+    .partner-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.09);}
+    .partner-card-top{height:70px;background:linear-gradient(135deg,#111 0%,#2a2a2a 100%);display:flex;align-items:center;padding:0 1.4rem;gap:1rem;}
+    .pc-avatar{width:42px;height:42px;border-radius:50%;background:var(--orange);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,.15);}
+    .pc-name{color:#fff;font-weight:600;font-size:.95rem;}
+    .pc-role{font-size:.72rem;color:rgba(255,255,255,.4);font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;text-transform:uppercase;}
+    .partner-card-body{padding:1.2rem 1.4rem;}
+    .pc-email{font-size:.82rem;color:var(--ash);margin-bottom:1rem;display:flex;align-items:center;gap:.4rem;}
+    .pc-email svg{width:13px;height:13px;flex-shrink:0;}
+    .pc-stats{display:flex;gap:1.5rem;}
+    .pc-stat-val{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.03em;line-height:1;}
+    .pc-stat-label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);font-weight:600;}
+    .partner-card-footer{padding:.8rem 1.4rem;border-top:1px solid var(--border);display:flex;gap:.6rem;}
+    .pc-btn{flex:1;padding:.45rem;border-radius:5px;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;cursor:pointer;border:1.5px solid var(--border);background:transparent;color:var(--ash);transition:all .2s;text-align:center;}
+    .pc-btn:hover{border-color:var(--orange);color:var(--orange);}
+    .pc-btn.primary{background:var(--orange);border-color:var(--orange);color:#fff;}
+    .pc-btn.primary:hover{background:var(--orange-lt);border-color:var(--orange-lt);}
+
+    /* ── Admin form modals ── */
+    .aform-group{margin-bottom:1.1rem;}
+    .aform-group label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:.67rem;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);font-weight:700;margin-bottom:.4rem;}
+    .aform-group input,.aform-group select,.aform-group textarea{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:6px;padding:.72rem .9rem;font-family:'Barlow',sans-serif;font-size:.9rem;color:var(--black);outline:none;transition:border-color .2s;}
+    .aform-group input:focus,.aform-group select:focus,.aform-group textarea:focus{border-color:var(--orange);}
+    .aform-group textarea{resize:vertical;min-height:80px;}
+    .aform-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+    .aform-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
+
     /* ── Responsive ── */
     @media (max-width: 1200px) {
       .project-grid { grid-template-columns: repeat(2, 1fr); }
@@ -710,11 +759,14 @@
         Dashboard
       </div>
 
-      <div class="sidebar-link" data-view="projects" onclick="showView('projects', 'My Projects', this)">
+      <div class="sidebar-link" data-view="projects" onclick="showView('projects', 'Projects', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>
-        My Projects
-        <span class="link-badge">4</span>
+        Projects
+        <span class="link-badge" id="proj-badge" style="display:none">0</span>
       </div>
+
+      <!-- Admin-only nav items injected here by JS -->
+      <div id="admin-nav-items"></div>
 
       <div class="sidebar-section-title">Financials</div>
 
@@ -731,7 +783,7 @@
       <div class="sidebar-link" data-view="invoices" onclick="showView('invoices', 'Invoices', this)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>
         Invoices
-        <span class="link-badge">3</span>
+        <span class="link-badge" id="inv-badge" style="display:none">0</span>
       </div>
 
       <div class="sidebar-section-title">Tools</div>
@@ -799,113 +851,39 @@
       <div class="view active" id="view-overview">
         <div class="view-header">
           <h2>Dashboard</h2>
-          <p>Welcome back, Marcus. Here's what's happening with your projects today.</p>
+          <p id="overview-greeting">Welcome back. Here's what's happening with your projects today.</p>
         </div>
-
-        <!-- KPI Cards -->
-        <div class="kpi-grid">
-          <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
-              <span class="kpi-trend">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>+1
-              </span>
-            </div>
-            <div class="kpi-val">4</div>
-            <div class="kpi-label">Active Projects</div>
-          </div>
-          <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-              <span class="kpi-trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>+18%</span>
-            </div>
-            <div class="kpi-val">$563K</div>
-            <div class="kpi-label">Total Revenue</div>
-          </div>
-          <div class="kpi-card" style="--accent:#6366F1;--icon-bg:rgba(99,102,241,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg></div>
-              <span class="kpi-trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>+9%</span>
-            </div>
-            <div class="kpi-val">$97.2K</div>
-            <div class="kpi-label">Labor Paid to Everlast</div>
-          </div>
-          <div class="kpi-card" style="--accent:#3B82F6;--icon-bg:rgba(59,130,246,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
-              <span class="kpi-trend down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,9 12,15 6,9"/></svg>3 open</span>
-            </div>
-            <div class="kpi-val">$85.8K</div>
-            <div class="kpi-label">Open Invoices</div>
-          </div>
-        </div>
-
-        <!-- Overview cols -->
+        <div class="kpi-grid" id="overview-kpis"><!-- JS rendered --></div>
         <div class="overview-cols">
-          <!-- Active projects -->
           <div class="card">
             <div class="card-header">
               <span class="card-header-title">Active Projects</span>
-              <span class="card-link" onclick="showView('projects','My Projects',document.querySelector('[data-view=projects]'))">View All →</span>
+              <span class="card-link" onclick="showView('projects','Projects',document.querySelector('[data-view=projects]'))">View All →</span>
             </div>
-            <div class="mini-project">
-              <div class="mini-proj-dot dot-roofing"></div>
-              <div class="mini-proj-info"><div class="mini-proj-name">Henderson Flat Roof Replacement</div><div class="mini-proj-type">Roofing · In Progress</div></div>
-              <div class="mini-proj-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:65%"></div></div><div class="mini-pct">65%</div></div>
-            </div>
-            <div class="mini-project">
-              <div class="mini-proj-dot dot-commercial"></div>
-              <div class="mini-proj-info"><div class="mini-proj-name">Las Vegas Commercial Buildout</div><div class="mini-proj-type">Commercial · In Progress</div></div>
-              <div class="mini-proj-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:30%"></div></div><div class="mini-pct">30%</div></div>
-            </div>
-            <div class="mini-project">
-              <div class="mini-proj-dot dot-outdoor"></div>
-              <div class="mini-proj-info"><div class="mini-proj-name">Centennial Hills Outdoor Living</div><div class="mini-proj-type">Outdoor Living · In Progress</div></div>
-              <div class="mini-proj-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:80%"></div></div><div class="mini-pct">80%</div></div>
-            </div>
-            <div class="mini-project">
-              <div class="mini-proj-dot dot-addition"></div>
-              <div class="mini-proj-info"><div class="mini-proj-name">Summerlin Home Addition</div><div class="mini-proj-type">Home Addition · In Progress</div></div>
-              <div class="mini-proj-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:20%"></div></div><div class="mini-pct">20%</div></div>
-            </div>
+            <div id="overview-active-projects"><!-- JS rendered --></div>
           </div>
-
-          <!-- Activity feed -->
           <div class="card">
             <div class="card-header"><span class="card-header-title">Recent Activity</span></div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(16,185,129,.1);color:#10B981"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div>
-              <div class="activity-text"><p>Invoice <strong>INV-26-0892</strong> marked as Paid</p><div class="activity-time">2 hours ago</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(255,129,14,.1);color:#FF810E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16,16 12,12 8,16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg></div>
-              <div class="activity-text"><p><strong>3 photos</strong> uploaded to Centennial Hills Outdoor</p><div class="activity-time">5 hours ago</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(99,102,241,.1);color:#6366F1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div>
-              <div class="activity-text"><p>Progress updated: <strong>Henderson Flat Roof</strong> is now 65%</p><div class="activity-time">1 day ago</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(59,130,246,.1);color:#3B82F6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-              <div class="activity-text"><p>New invoice <strong>INV-26-0893</strong> sent — $46,200</p><div class="activity-time">2 days ago</div></div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-icon" style="background:rgba(139,92,246,.1);color:#8B5CF6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-              <div class="activity-text"><p><strong>Diego Ruiz</strong> added a note to LV Commercial Buildout</p><div class="activity-time">3 days ago</div></div>
-            </div>
+            <div id="overview-activity"><!-- JS rendered --></div>
           </div>
         </div>
       </div>
 
       <!-- ─── VIEW: PROJECTS ─── -->
       <div class="view" id="view-projects">
-        <div class="view-header">
-          <h2>My Projects</h2>
-          <p>Track the status, progress, and details of all your Everlast projects.</p>
+        <div class="view-header-row">
+          <div class="view-header">
+            <h2>Projects</h2>
+            <p>Track the status, progress, and details of all Everlast projects.</p>
+          </div>
+          <button class="admin-add-btn" id="btn-add-project" style="display:none" onclick="openAdminModal('project')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Project
+          </button>
         </div>
 
         <div class="filter-tabs" id="proj-filters">
-          <button class="filter-tab active" onclick="filterProjects('all', this)">All (8)</button>
+          <button class="filter-tab active" onclick="filterProjects('all', this)">All</button>
           <button class="filter-tab" onclick="filterProjects('Roofing', this)">Roofing</button>
           <button class="filter-tab" onclick="filterProjects('Interior Remodeling', this)">Interior Remodeling</button>
           <button class="filter-tab" onclick="filterProjects('Exterior', this)">Exterior</button>
@@ -924,157 +902,42 @@
       <div class="view" id="view-reports">
         <div class="view-header">
           <h2>Sales Reports</h2>
-          <p>Monthly revenue breakdown and project performance summary.</p>
+          <p>Revenue breakdown and project performance summary.</p>
         </div>
-
-        <div class="report-kpi-grid">
-          <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/><polyline points="17,6 23,6 23,12"/></svg></div>
-              <span class="kpi-trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>+18%</span>
-            </div>
-            <div class="kpi-val">$428.5K</div>
-            <div class="kpi-label">6-Month Revenue</div>
-          </div>
-          <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
-              <span class="kpi-trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>+2</span>
-            </div>
-            <div class="kpi-val">$71.4K</div>
-            <div class="kpi-label">Avg Monthly Revenue</div>
-          </div>
-          <div class="kpi-card" style="--accent:#8B5CF6;--icon-bg:rgba(139,92,246,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div>
-              <span class="kpi-trend"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18,15 12,9 6,15"/></svg>4 done</span>
-            </div>
-            <div class="kpi-val">17</div>
-            <div class="kpi-label">Projects This Period</div>
-          </div>
-        </div>
-
-        <div class="chart-card">
-          <div class="chart-title">Monthly Revenue — Sep 2025 to Feb 2026</div>
-          <div class="chart-bars" id="chart-bars">
-            <!-- Injected by JS -->
-          </div>
-        </div>
-
-        <div class="report-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Month</th>
-                <th>Projects</th>
-                <th>Revenue</th>
-                <th>Labor Cost</th>
-                <th>Net Margin</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="td-strong">Sep 2025</td><td>2</td><td class="amount-cell green">$97,300</td><td class="td-muted">$22,680</td><td class="amount-cell">$74,620</td></tr>
-              <tr><td class="td-strong">Oct 2025</td><td>3</td><td class="amount-cell green">$81,200</td><td class="td-muted">$18,640</td><td class="amount-cell">$62,560</td></tr>
-              <tr><td class="td-strong">Nov 2025</td><td>3</td><td class="amount-cell green">$52,400</td><td class="td-muted">$12,800</td><td class="amount-cell">$39,600</td></tr>
-              <tr><td class="td-strong">Dec 2025</td><td>2</td><td class="amount-cell green">$44,800</td><td class="td-muted">$9,640</td><td class="amount-cell">$35,160</td></tr>
-              <tr><td class="td-strong">Jan 2026</td><td>4</td><td class="amount-cell green">$89,600</td><td class="td-muted">$20,240</td><td class="amount-cell">$69,360</td></tr>
-              <tr><td class="td-strong" style="color:var(--orange)">Feb 2026 ★</td><td>3</td><td class="amount-cell orange">$63,200</td><td class="td-muted">$13,480</td><td class="amount-cell orange">$49,720</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="report-kpi-grid" id="report-kpis"><!-- JS rendered --></div>
+        <div id="report-chart-wrap"><!-- JS rendered --></div>
+        <div id="report-table-wrap"><!-- JS rendered --></div>
       </div>
 
       <!-- ─── VIEW: LABOR ─── -->
       <div class="view" id="view-labor">
         <div class="view-header">
           <h2>Labor &amp; Payouts</h2>
-          <p>Detailed breakdown of labor costs paid to Everlast per project.</p>
+          <p>Breakdown of labor costs and payments per project.</p>
         </div>
-
-        <div class="labor-kpi-grid">
-          <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-            </div>
-            <div class="kpi-val">$97.2K</div>
-            <div class="kpi-label">Total Labor Paid</div>
-          </div>
-          <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div>
-            </div>
-            <div class="kpi-val">$53.3K</div>
-            <div class="kpi-label">Paid &amp; Settled</div>
-          </div>
-          <div class="kpi-card" style="--accent:#F59E0B;--icon-bg:rgba(245,158,11,.1)">
-            <div class="kpi-top">
-              <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
-            </div>
-            <div class="kpi-val">$43.9K</div>
-            <div class="kpi-label">In Progress</div>
-          </div>
-        </div>
-
-        <div class="report-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Project</th>
-                <th>Type</th>
-                <th>Crew</th>
-                <th>Hours</th>
-                <th>Rate</th>
-                <th>Total</th>
-                <th>Month</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr><td class="td-strong">Henderson Flat Roof</td><td><span class="status-badge type-roofing" style="border-radius:4px;font-size:.65rem">Roofing</span></td><td class="td-muted">Roofing Crew A</td><td>240 hrs</td><td class="td-muted">$52/hr</td><td class="amount-cell">$12,480</td><td class="td-muted">Feb 2026</td><td><span class="status-badge status-inprogress">In Progress</span></td></tr>
-              <tr><td class="td-strong">Summerlin Kitchen</td><td><span class="status-badge type-interior" style="border-radius:4px;font-size:.65rem">Interior</span></td><td class="td-muted">Interior Team B</td><td>380 hrs</td><td class="td-muted">$48/hr</td><td class="amount-cell">$18,240</td><td class="td-muted">Jan 2026</td><td><span class="status-badge status-paid">Paid</span></td></tr>
-              <tr><td class="td-strong">LV Commercial Buildout</td><td><span class="status-badge type-commercial" style="border-radius:4px;font-size:.65rem">Commercial</span></td><td class="td-muted">Commercial Crew</td><td>160 hrs</td><td class="td-muted">$58/hr</td><td class="amount-cell">$9,280</td><td class="td-muted">Feb 2026</td><td><span class="status-badge status-inprogress">In Progress</span></td></tr>
-              <tr><td class="td-strong">Green Valley Bath</td><td><span class="status-badge type-interior" style="border-radius:4px;font-size:.65rem">Interior</span></td><td class="td-muted">Tile &amp; Bath Team</td><td>140 hrs</td><td class="td-muted">$46/hr</td><td class="amount-cell">$6,440</td><td class="td-muted">Dec 2025</td><td><span class="status-badge status-paid">Paid</span></td></tr>
-              <tr><td class="td-strong">Centennial Hills Outdoor</td><td><span class="status-badge type-outdoor" style="border-radius:4px;font-size:.65rem">Outdoor</span></td><td class="td-muted">Outdoor Crew</td><td>320 hrs</td><td class="td-muted">$44/hr</td><td class="amount-cell">$14,080</td><td class="td-muted">Feb 2026</td><td><span class="status-badge status-inprogress">In Progress</span></td></tr>
-              <tr><td class="td-strong">Henderson Solar + Roof</td><td><span class="status-badge type-roofing" style="border-radius:4px;font-size:.65rem">Roofing</span></td><td class="td-muted">Roofing &amp; Solar</td><td>420 hrs</td><td class="td-muted">$54/hr</td><td class="amount-cell">$22,680</td><td class="td-muted">Nov 2025</td><td><span class="status-badge status-paid">Paid</span></td></tr>
-              <tr><td class="td-strong">Summerlin Addition</td><td><span class="status-badge type-addition" style="border-radius:4px;font-size:.65rem">Addition</span></td><td class="td-muted">Framing Crew</td><td>180 hrs</td><td class="td-muted">$50/hr</td><td class="amount-cell">$9,000</td><td class="td-muted">Feb 2026</td><td><span class="status-badge status-inprogress">In Progress</span></td></tr>
-            </tbody>
-          </table>
-        </div>
+        <div class="labor-kpi-grid" id="labor-kpis"><!-- JS rendered --></div>
+        <div id="labor-table-wrap"><!-- JS rendered --></div>
       </div>
 
       <!-- ─── VIEW: INVOICES ─── -->
       <div class="view" id="view-invoices">
-        <div class="view-header">
-          <h2>Invoices</h2>
-          <p>View, download, and track all invoices associated with your projects.</p>
+        <div class="view-header-row">
+          <div class="view-header">
+            <h2>Invoices</h2>
+            <p>View, download, and track all invoices for your projects.</p>
+          </div>
+          <button class="admin-add-btn" id="btn-add-invoice" style="display:none" onclick="openAdminModal('invoice')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Invoice
+          </button>
         </div>
-
         <div class="filter-tabs" id="inv-filters">
-          <button class="filter-tab active" onclick="filterInvoices('all', this)">All (8)</button>
-          <button class="filter-tab" onclick="filterInvoices('Paid', this)">Paid (4)</button>
-          <button class="filter-tab" onclick="filterInvoices('Pending', this)">Pending (3)</button>
-          <button class="filter-tab" onclick="filterInvoices('Overdue', this)">Overdue (1)</button>
+          <button class="filter-tab active" onclick="filterInvoices('all', this)">All</button>
+          <button class="filter-tab" onclick="filterInvoices('Paid', this)">Paid</button>
+          <button class="filter-tab" onclick="filterInvoices('Pending', this)">Pending</button>
+          <button class="filter-tab" onclick="filterInvoices('Overdue', this)">Overdue</button>
         </div>
-
-        <div class="report-table-wrap">
-          <table class="data-table" id="invoices-table">
-            <thead>
-              <tr>
-                <th>Invoice #</th>
-                <th>Project</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Issued</th>
-                <th>Due Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="invoices-tbody">
-              <!-- Injected by JS -->
-            </tbody>
-          </table>
-        </div>
+        <div id="invoices-wrap"><!-- JS rendered --></div>
       </div>
 
       <!-- ─── VIEW: UPLOAD ─── -->
@@ -1083,24 +946,13 @@
           <h2>Upload Files</h2>
           <p>Attach photos, documents, and notes to any active project.</p>
         </div>
-
         <div class="upload-grid">
-          <!-- Form -->
           <div class="upload-form-card">
             <h3>Add Files to Project</h3>
-
             <div class="form-field">
               <label>Select Project</label>
               <select id="upload-project">
                 <option value="">— Choose a project —</option>
-                <option value="P-001">Henderson Flat Roof Replacement</option>
-                <option value="P-002">Summerlin Master Kitchen Remodel</option>
-                <option value="P-003">Las Vegas Commercial Buildout</option>
-                <option value="P-004">Green Valley Master Bath Renovation</option>
-                <option value="P-005">Centennial Hills Outdoor Living Space</option>
-                <option value="P-006">North LV Exterior Stucco &amp; Paint</option>
-                <option value="P-007">Henderson Solar + Roof Package</option>
-                <option value="P-008">Summerlin Home Addition</option>
               </select>
             </div>
 
@@ -1138,43 +990,145 @@
           <!-- Recent uploads -->
           <div class="recent-uploads-card">
             <h3>Recent Uploads</h3>
-            <div class="upload-file-item">
-              <div class="file-icon photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-              <div class="file-info"><div class="file-name">Progress_Feb05.jpg</div><div class="file-meta">Henderson Flat Roof · 3.1 MB · Feb 5, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Progress_Feb05.jpg…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
-            <div class="upload-file-item">
-              <div class="file-icon doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-              <div class="file-info"><div class="file-name">Material_Delivery_Note.pdf</div><div class="file-meta">Henderson Flat Roof · 0.8 MB · Jan 22, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Material_Delivery_Note.pdf…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
-            <div class="upload-file-item">
-              <div class="file-icon photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-              <div class="file-info"><div class="file-name">Pergola_Frame.jpg</div><div class="file-meta">Centennial Hills Outdoor · 3.2 MB · Feb 8, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Pergola_Frame.jpg…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
-            <div class="upload-file-item">
-              <div class="file-icon doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-              <div class="file-info"><div class="file-name">Site_Assessment.pdf</div><div class="file-meta">LV Commercial Buildout · 4.2 MB · Feb 3, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Site_Assessment.pdf…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
-            <div class="upload-file-item">
-              <div class="file-icon photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg></div>
-              <div class="file-info"><div class="file-name">Foundation_Poured.jpg</div><div class="file-meta">Centennial Hills Outdoor · 2.6 MB · Jan 5, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Foundation_Poured.jpg…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
-            <div class="upload-file-item">
-              <div class="file-icon doc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div>
-              <div class="file-info"><div class="file-name">Building_Permit.pdf</div><div class="file-meta">Summerlin Home Addition · 3.2 MB · Feb 10, 2026</div></div>
-              <button class="file-dl-btn" onclick="showToast('Downloading Building_Permit.pdf…')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
-            </div>
+            <div id="recent-uploads-list"><!-- JS rendered --></div>
           </div>
         </div>
+      </div>
+
+      <!-- ─── VIEW: PARTNERS (admin only) ─── -->
+      <div class="view" id="view-partners">
+        <div class="view-header-row">
+          <div class="view-header">
+            <h2>Partners</h2>
+            <p>Manage partner accounts and their assigned projects.</p>
+          </div>
+          <button class="admin-add-btn" onclick="openAdminModal('partner')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Partner
+          </button>
+        </div>
+        <div class="partners-grid" id="partners-grid"><!-- JS rendered --></div>
       </div>
 
     </div><!-- /portal-content -->
   </div><!-- /portal-main -->
 </div><!-- /portal-layout -->
+
+<!-- ══ Add Project Modal (admin) ══ -->
+<div class="modal-overlay" id="modal-add-project">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div><div class="modal-title">Add New Project</div><p style="font-size:.82rem;color:var(--ash);margin-top:.25rem">Assign a project to a partner account</p></div>
+      <button class="modal-close" onclick="closeAdminModal('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="aform-row">
+        <div class="aform-group"><label>Project Name *</label><input type="text" id="ap-name" placeholder="e.g. Henderson Flat Roof Replacement" /></div>
+        <div class="aform-group"><label>Assign to Partner *</label><select id="ap-partner"><option value="">— Select partner —</option></select></div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Project Type *</label>
+          <select id="ap-type">
+            <option value="Roofing">Roofing</option>
+            <option value="Interior Remodeling">Interior Remodeling</option>
+            <option value="Exterior">Exterior</option>
+            <option value="Commercial">Commercial</option>
+            <option value="Outdoor Living">Outdoor Living</option>
+            <option value="Kitchen &amp; Bath">Kitchen &amp; Bath</option>
+            <option value="Home Addition">Home Addition</option>
+          </select>
+        </div>
+        <div class="aform-group"><label>Status</label>
+          <select id="ap-status">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="On Hold">On Hold</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Location</label><input type="text" id="ap-loc" placeholder="e.g. Henderson, NV" /></div>
+        <div class="aform-group"><label>Project Manager</label><input type="text" id="ap-pm" placeholder="e.g. Diego Ruiz" /></div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Contract Amount</label><input type="text" id="ap-amount" placeholder="e.g. $38,400" /></div>
+        <div class="aform-group"><label>Progress (0–100%)</label><input type="number" id="ap-progress" min="0" max="100" value="0" /></div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Start Date</label><input type="text" id="ap-start" placeholder="e.g. Jan 14, 2026" /></div>
+        <div class="aform-group"><label>Est. Completion</label><input type="text" id="ap-end" placeholder="e.g. Mar 28, 2026" /></div>
+      </div>
+      <div class="aform-group"><label>Description</label><textarea id="ap-desc" placeholder="Brief description of the project scope…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-outline" onclick="closeAdminModal('project')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Add Invoice Modal (admin) ══ -->
+<div class="modal-overlay" id="modal-add-invoice">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div><div class="modal-title">Add Invoice</div><p style="font-size:.82rem;color:var(--ash);margin-top:.25rem">Issue an invoice to a partner project</p></div>
+      <button class="modal-close" onclick="closeAdminModal('invoice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="aform-row">
+        <div class="aform-group"><label>Project *</label><select id="ai-project"><option value="">— Select project —</option></select></div>
+        <div class="aform-group"><label>Invoice Type *</label>
+          <select id="ai-type">
+            <option value="Deposit">Deposit</option>
+            <option value="Progress Draw">Progress Draw</option>
+            <option value="Material Draw">Material Draw</option>
+            <option value="Labor Draw">Labor Draw</option>
+            <option value="Final Payment">Final Payment</option>
+          </select>
+        </div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Amount ($) *</label><input type="number" id="ai-amount" placeholder="e.g. 15000" min="0" /></div>
+        <div class="aform-group"><label>Status</label>
+          <select id="ai-status">
+            <option value="Pending">Pending</option>
+            <option value="Paid">Paid</option>
+            <option value="Overdue">Overdue</option>
+          </select>
+        </div>
+      </div>
+      <div class="aform-row">
+        <div class="aform-group"><label>Issue Date</label><input type="text" id="ai-date" placeholder="e.g. Feb 10, 2026" /></div>
+        <div class="aform-group"><label>Due Date</label><input type="text" id="ai-due" placeholder="e.g. Feb 24, 2026" /></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-outline" onclick="closeAdminModal('invoice')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="saveInvoice()">Save Invoice</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Add Partner Modal (admin) ══ -->
+<div class="modal-overlay" id="modal-add-partner">
+  <div class="modal-card" style="max-width:480px">
+    <div class="modal-header">
+      <div><div class="modal-title">Add Partner</div><p style="font-size:.82rem;color:var(--ash);margin-top:.25rem">Create a new partner login account</p></div>
+      <button class="modal-close" onclick="closeAdminModal('partner')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="aform-group"><label>Company Name *</label><input type="text" id="addp-company" placeholder="e.g. Smith Construction LLC" /></div>
+      <div class="aform-group"><label>Contact Name *</label><input type="text" id="addp-name" placeholder="e.g. John Smith" /></div>
+      <div class="aform-group"><label>Email Address *</label><input type="email" id="addp-email" placeholder="e.g. john@smithconstruction.com" /></div>
+      <div class="aform-group"><label>Password *</label><input type="text" id="addp-password" placeholder="Temporary password (share securely)" /></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-outline" onclick="closeAdminModal('partner')">Cancel</button>
+      <button class="modal-btn modal-btn-primary" onclick="savePartner()">Create Partner</button>
+    </div>
+  </div>
+</div>
 
 <!-- ══ Project Detail Modal ══ -->
 <div class="modal-overlay" id="project-modal">
@@ -1225,39 +1179,53 @@
 </div>
 
 <script>
-// ═══════════ DATA ═══════════
-const projects = [
-  { id:'P-2026-001', name:'Henderson Flat Roof Replacement',   type:'Roofing',             status:'In Progress', progress:65,  loc:'Henderson, NV',    pm:'Diego Ruiz',     amount:'$38,400',  start:'Jan 14, 2026', end:'Mar 28, 2026', desc:'Complete replacement of flat TPO roofing system with new insulation and drainage improvements.', uploads:[{name:'Roof_Inspection_Jan14.jpg',type:'photo',date:'Jan 14, 2026',size:'2.4 MB'},{name:'Material_Delivery_Note.pdf',type:'doc',date:'Jan 22, 2026',size:'0.8 MB'},{name:'Progress_Feb05.jpg',type:'photo',date:'Feb 5, 2026',size:'3.1 MB'}] },
-  { id:'P-2025-002', name:'Summerlin Master Kitchen Remodel',  type:'Interior Remodeling', status:'Completed',   progress:100, loc:'Summerlin, NV',     pm:'Sarah Chen',     amount:'$52,800',  start:'Oct 3, 2025',  end:'Jan 10, 2026', desc:'Full kitchen renovation including custom cabinetry, quartz countertops, and new appliance installation.', uploads:[{name:'Before_Kitchen.jpg',type:'photo',date:'Oct 3, 2025',size:'2.8 MB'},{name:'Inspection_Complete.pdf',type:'doc',date:'Jan 8, 2026',size:'1.2 MB'},{name:'Final_Walkthrough.jpg',type:'photo',date:'Jan 10, 2026',size:'3.4 MB'}] },
-  { id:'P-2026-003', name:'Las Vegas Commercial Buildout',     type:'Commercial',          status:'In Progress', progress:30,  loc:'Las Vegas, NV',    pm:'Alex Thompson',  amount:'$184,500', start:'Feb 3, 2026',  end:'Jun 30, 2026', desc:'Complete commercial office buildout including partition walls, lighting, HVAC, and custom finishes.', uploads:[{name:'Site_Assessment.pdf',type:'doc',date:'Feb 3, 2026',size:'4.2 MB'},{name:'Demo_Completion.jpg',type:'photo',date:'Feb 12, 2026',size:'2.1 MB'}] },
-  { id:'P-2025-004', name:'Green Valley Master Bath Renovation',type:'Interior Remodeling',status:'Completed',   progress:100, loc:'Henderson, NV',    pm:'Sarah Chen',     amount:'$28,600',  start:'Nov 4, 2025',  end:'Dec 19, 2025', desc:'Master bathroom renovation with custom tile work, frameless glass shower, and double vanity.', uploads:[{name:'Before_Bath.jpg',type:'photo',date:'Nov 4, 2025',size:'2.2 MB'},{name:'Tile_Selections.pdf',type:'doc',date:'Nov 8, 2025',size:'0.9 MB'},{name:'Final_Bath.jpg',type:'photo',date:'Dec 19, 2025',size:'3.8 MB'}] },
-  { id:'P-2025-005', name:'Centennial Hills Outdoor Living Space',type:'Outdoor Living',   status:'In Progress', progress:80,  loc:'Las Vegas, NV',    pm:'Miguel Santos',  amount:'$44,200',  start:'Dec 15, 2025', end:'Mar 10, 2026', desc:'Custom outdoor living space with pergola, built-in BBQ, fire pit, and artificial turf.', uploads:[{name:'Design_Rendering.pdf',type:'doc',date:'Dec 10, 2025',size:'8.4 MB'},{name:'Foundation_Poured.jpg',type:'photo',date:'Jan 5, 2026',size:'2.6 MB'},{name:'Pergola_Frame.jpg',type:'photo',date:'Feb 8, 2026',size:'3.2 MB'}] },
-  { id:'P-2026-006', name:'North LV Exterior Stucco & Paint',  type:'Exterior',            status:'On Hold',     progress:45,  loc:'North Las Vegas, NV',pm:'Diego Ruiz',   amount:'$22,400',  start:'Jan 20, 2026', end:'Apr 5, 2026',  desc:'Full exterior stucco repair and repaint with water-resistant coating. On hold pending HOA approval.', uploads:[{name:'HOA_Application.pdf',type:'doc',date:'Jan 20, 2026',size:'1.6 MB'},{name:'Stucco_Damage_Photos.jpg',type:'photo',date:'Jan 20, 2026',size:'4.1 MB'}] },
-  { id:'P-2025-007', name:'Henderson Solar + Roof Package',    type:'Roofing',             status:'Completed',   progress:100, loc:'Henderson, NV',    pm:'Alex Thompson',  amount:'$68,900',  start:'Sep 8, 2025',  end:'Nov 30, 2025', desc:'Full roof replacement with new underlayment followed by 24-panel solar installation with battery backup.', uploads:[{name:'Permit_Approved.pdf',type:'doc',date:'Sep 8, 2025',size:'2.1 MB'},{name:'Solar_Install_Complete.jpg',type:'photo',date:'Nov 28, 2025',size:'4.8 MB'},{name:'NV_Energy_Approval.pdf',type:'doc',date:'Nov 30, 2025',size:'1.4 MB'}] },
-  { id:'P-2026-008', name:'Summerlin Home Addition',           type:'Home Addition',        status:'In Progress', progress:20,  loc:'Summerlin, NV',    pm:'Sarah Chen',     amount:'$124,000', start:'Feb 10, 2026', end:'Aug 1, 2026',  desc:'600 sq ft primary bedroom addition with en-suite bathroom, walk-in closet, and vaulted ceilings.', uploads:[{name:'Building_Permit.pdf',type:'doc',date:'Feb 10, 2026',size:'3.2 MB'},{name:'Foundation_Plan.pdf',type:'doc',date:'Feb 18, 2026',size:'5.1 MB'}] }
+// ═══════════ BASE PARTNERS (hardcoded) ═══════════
+const BASE_PARTNERS = [
+  { email:'admin@everlastgc.com',         name:'Everlast Admin',  company:'Everlast General Contracting', initials:'EA', role:'admin'   },
+  { email:'admin@valleyconstruction.com', name:'Valley Admin',    company:'Valley Construction',          initials:'VC', role:'partner' },
+  { email:'admin@quantumgc.com',          name:'Quantum Admin',   company:'Quantum General Contracting',  initials:'QG', role:'partner' }
 ];
 
-const invoices = [
-  { id:'INV-26-0891', project:'Henderson Flat Roof',       type:'Progress Draw',  amount:18400, date:'Feb 1, 2026',   due:'Feb 15, 2026', status:'Paid'    },
-  { id:'INV-26-0892', project:'Summerlin Kitchen',         type:'Final Payment',  amount:32500, date:'Jan 12, 2026',  due:'Jan 26, 2026', status:'Paid'    },
-  { id:'INV-26-0893', project:'LV Commercial Buildout',    type:'Progress Draw',  amount:46200, date:'Feb 10, 2026',  due:'Feb 24, 2026', status:'Pending' },
-  { id:'INV-26-0894', project:'Centennial Hills Outdoor',  type:'Labor Draw',     amount:8600,  date:'Feb 20, 2026',  due:'Mar 6, 2026',  status:'Pending' },
-  { id:'INV-26-0895', project:'Henderson Solar + Roof',    type:'Final Payment',  amount:42800, date:'Dec 1, 2025',   due:'Dec 15, 2025', status:'Paid'    },
-  { id:'INV-26-0896', project:'North LV Exterior',         type:'Material Draw',  amount:6800,  date:'Jan 28, 2026',  due:'Feb 11, 2026', status:'Overdue' },
-  { id:'INV-26-0897', project:'Green Valley Bath',         type:'Final Payment',  amount:28600, date:'Dec 20, 2025',  due:'Jan 3, 2026',  status:'Paid'    },
-  { id:'INV-26-0898', project:'Summerlin Addition',        type:'Deposit',        amount:31000, date:'Feb 10, 2026',  due:'Feb 17, 2026', status:'Pending' }
-];
+// ═══════════ localStorage DB helpers ═══════════
+function dbGet(key) { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; } }
+function dbSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
 
+function getAllPartners() {
+  const dynamic = dbGet('ev_db_partners');
+  return [...BASE_PARTNERS, ...dynamic];
+}
+function getPartnerPartners() {
+  return getAllPartners().filter(p => p.role === 'partner');
+}
+function getProjects(email, isAdmin) {
+  const all = dbGet('ev_db_projects');
+  return isAdmin ? all : all.filter(p => p.partnerEmail === email);
+}
+function getInvoices(email, isAdmin) {
+  const all = dbGet('ev_db_invoices');
+  return isAdmin ? all : all.filter(i => i.partnerEmail === email);
+}
+function getActivity(email, isAdmin) {
+  const all = dbGet('ev_db_activity');
+  return isAdmin ? all : all.filter(a => a.partnerEmail === email);
+}
+function addActivity(partnerEmail, text) {
+  const acts = dbGet('ev_db_activity');
+  acts.unshift({ partnerEmail, text, time: new Date().toISOString() });
+  if (acts.length > 50) acts.length = 50;
+  dbSet('ev_db_activity', acts);
+}
+
+// ═══════════ TYPE STYLES ═══════════
 const typeColors = {
-  'Roofing':             { bg:'rgba(255,129,14,.12)',    color:'#FF810E',  icon:'roofing'   },
-  'Interior Remodeling': { bg:'rgba(99,102,241,.12)',    color:'#6366F1',  icon:'interior'  },
-  'Exterior':            { bg:'rgba(16,185,129,.12)',    color:'#10B981',  icon:'exterior'  },
-  'Commercial':          { bg:'rgba(139,92,246,.12)',    color:'#8B5CF6',  icon:'commercial'},
-  'Outdoor Living':      { bg:'rgba(60,206,203,.12)',    color:'#0AADA9',  icon:'outdoor'   },
-  'Kitchen & Bath':      { bg:'rgba(236,72,153,.12)',    color:'#EC4899',  icon:'kitchen'   },
-  'Home Addition':       { bg:'rgba(245,158,11,.12)',    color:'#D97706',  icon:'addition'  }
+  'Roofing':             { bg:'rgba(255,129,14,.12)',  color:'#FF810E', icon:'roofing',    dot:'#FF810E'  },
+  'Interior Remodeling': { bg:'rgba(99,102,241,.12)',  color:'#6366F1', icon:'interior',   dot:'#6366F1'  },
+  'Exterior':            { bg:'rgba(16,185,129,.12)',  color:'#10B981', icon:'exterior',   dot:'#10B981'  },
+  'Commercial':          { bg:'rgba(139,92,246,.12)',  color:'#8B5CF6', icon:'commercial', dot:'#8B5CF6'  },
+  'Outdoor Living':      { bg:'rgba(60,206,203,.12)',  color:'#0AADA9', icon:'outdoor',    dot:'#0AADA9'  },
+  'Kitchen & Bath':      { bg:'rgba(236,72,153,.12)',  color:'#EC4899', icon:'kitchen',    dot:'#EC4899'  },
+  'Home Addition':       { bg:'rgba(245,158,11,.12)',  color:'#D97706', icon:'addition',   dot:'#D97706'  }
 };
-
 const typeIcons = {
   roofing:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>',
   interior:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20M4 20V10l8-6 8 6v10"/><rect x="9" y="14" width="6" height="6"/></svg>',
@@ -1271,13 +1239,17 @@ const typeIcons = {
 // ═══════════ NAVIGATION ═══════════
 function showView(viewId, title, el) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + viewId).classList.add('active');
+  const view = document.getElementById('view-' + viewId);
+  if (view) view.classList.add('active');
   document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
   if (el) el.classList.add('active');
   document.getElementById('topbar-title').textContent = title;
   closeSidebar();
+  if (viewId === 'partners') renderPartners();
+  if (viewId === 'reports')  renderReports();
+  if (viewId === 'labor')    renderLabor();
+  if (viewId === 'upload')   populateUploadSelector();
 }
-
 function toggleSidebar() {
   document.getElementById('portal-sidebar').classList.toggle('open');
   document.getElementById('sidebar-overlay').classList.toggle('show');
@@ -1287,14 +1259,103 @@ function closeSidebar() {
   document.getElementById('sidebar-overlay').classList.remove('show');
 }
 
-// ═══════════ PROJECTS ═══════════
+// ═══════════ STATUS HELPERS ═══════════
 function getStatusClass(s) {
-  return { 'In Progress':'status-inprogress','Completed':'status-completed','On Hold':'status-onhold' }[s] || 'status-inprogress';
+  return { 'In Progress':'status-inprogress','Completed':'status-completed','On Hold':'status-onhold','Pending':'status-pending' }[s] || 'status-inprogress';
+}
+const fmtAmt = n => '$' + Number(n).toLocaleString();
+
+// ═══════════ EMPTY STATE ═══════════
+function emptyState(icon, title, msg) {
+  return `<div class="empty-state">${icon}<h3>${title}</h3><p>${msg}</p></div>`;
+}
+const emptyProjIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>`;
+const emptyInvIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>`;
+
+// ═══════════ OVERVIEW ═══════════
+function renderOverview() {
+  const myProjects = getProjects(_session.email, _isAdmin);
+  const myInvoices = getInvoices(_session.email, _isAdmin);
+  const active     = myProjects.filter(p => p.status === 'In Progress' || p.status === 'Pending');
+  const totalRev   = myProjects.reduce((s, p) => s + (parseFloat(String(p.amount||'').replace(/[^0-9.]/g,''))||0), 0);
+  const openInvAmt = myInvoices.filter(i => i.status !== 'Paid').reduce((s,i) => s + Number(i.amount||0), 0);
+
+  document.getElementById('overview-kpis').innerHTML = `
+    <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg></div></div>
+      <div class="kpi-val">${active.length}</div><div class="kpi-label">Active Projects</div>
+    </div>
+    <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div></div>
+      <div class="kpi-val">${totalRev > 0 ? (totalRev>=1000 ? '$'+(totalRev/1000).toFixed(0)+'K' : fmtAmt(totalRev)) : '$0'}</div><div class="kpi-label">Total Contract Value</div>
+    </div>
+    <div class="kpi-card" style="--accent:#6366F1;--icon-bg:rgba(99,102,241,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div></div>
+      <div class="kpi-val">${myProjects.filter(p=>p.status==='Completed').length}</div><div class="kpi-label">Completed Projects</div>
+    </div>
+    <div class="kpi-card" style="--accent:#3B82F6;--icon-bg:rgba(59,130,246,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg></div></div>
+      <div class="kpi-val">${openInvAmt > 0 ? (openInvAmt>=1000 ? '$'+(openInvAmt/1000).toFixed(0)+'K' : fmtAmt(openInvAmt)) : '$0'}</div><div class="kpi-label">Open Invoices</div>
+    </div>`;
+
+  // Active projects mini list
+  const apEl = document.getElementById('overview-active-projects');
+  if (!active.length) {
+    apEl.innerHTML = emptyState(emptyProjIcon, 'No Active Projects', _isAdmin ? 'Use the Projects tab to add your first project.' : 'No projects have been assigned yet.');
+  } else {
+    apEl.innerHTML = active.slice(0,5).map(p => {
+      const tc = typeColors[p.type] || typeColors['Roofing'];
+      return `<div class="mini-project">
+        <div class="mini-proj-dot" style="background:${tc.dot}"></div>
+        <div class="mini-proj-info"><div class="mini-proj-name">${p.name}</div><div class="mini-proj-type">${p.type} · ${p.status}</div></div>
+        <div class="mini-proj-bar-wrap"><div class="mini-bar"><div class="mini-bar-fill" style="width:${p.progress}%"></div></div><div class="mini-pct">${p.progress}%</div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Activity feed
+  const acts = getActivity(_session.email, _isAdmin);
+  const actEl = document.getElementById('overview-activity');
+  if (!acts.length) {
+    actEl.innerHTML = emptyState(`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>`, 'No Activity Yet', 'Activity will appear here as projects are updated.');
+  } else {
+    actEl.innerHTML = acts.slice(0,8).map(a => {
+      const ago = timeAgo(a.time);
+      return `<div class="activity-item">
+        <div class="activity-icon" style="background:rgba(255,129,14,.1);color:#FF810E"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+        <div class="activity-text"><p>${a.text}</p><div class="activity-time">${ago}</div></div>
+      </div>`;
+    }).join('');
+  }
+
+  // Badges
+  const pb = document.getElementById('proj-badge');
+  if (myProjects.length) { pb.textContent = myProjects.length; pb.style.display = ''; }
+  const ib = document.getElementById('inv-badge');
+  const pendInv = myInvoices.filter(i => i.status === 'Pending' || i.status === 'Overdue');
+  if (pendInv.length) { ib.textContent = pendInv.length; ib.style.display = ''; }
 }
 
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  const m = Math.floor(diff/60000), h = Math.floor(m/60), d = Math.floor(h/24);
+  if (d > 0) return d + ' day' + (d>1?'s':'') + ' ago';
+  if (h > 0) return h + ' hour' + (h>1?'s':'') + ' ago';
+  if (m > 0) return m + ' minute' + (m>1?'s':'') + ' ago';
+  return 'Just now';
+}
+
+// ═══════════ PROJECTS ═══════════
+let _projectsList = [];
+
 function renderProjects(list) {
+  _projectsList = list !== undefined ? list : getProjects(_session.email, _isAdmin);
   const grid = document.getElementById('project-grid');
-  grid.innerHTML = list.map((p, i) => {
+  if (!_projectsList.length) {
+    grid.innerHTML = emptyState(emptyProjIcon, 'No Projects Yet', _isAdmin ? 'Click "Add Project" to create your first project.' : 'No projects have been assigned to your account yet.');
+    return;
+  }
+  grid.innerHTML = _projectsList.map((p, i) => {
     const tc = typeColors[p.type] || typeColors['Roofing'];
     const iconKey = tc.icon;
     return `
@@ -1329,15 +1390,15 @@ function renderProjects(list) {
 function filterProjects(type, btn) {
   document.querySelectorAll('#proj-filters .filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = type === 'all' ? projects : projects.filter(p => p.type === type);
-  renderProjects(filtered);
+  const all = getProjects(_session.email, _isAdmin);
+  renderProjects(type === 'all' ? all : all.filter(p => p.type === type));
 }
 
-// ═══════════ MODAL ═══════════
+// ═══════════ PROJECT DETAIL MODAL ═══════════
 let currentProjectIdx = 0;
 function openModal(idx) {
   currentProjectIdx = idx;
-  const p = projects[idx];
+  const p = _projectsList[idx];
   document.getElementById('modal-title').textContent = p.name;
   document.getElementById('modal-id').textContent = p.id;
   document.getElementById('modal-pm').textContent = p.pm;
@@ -1373,86 +1434,342 @@ function closeModal() {
 
 function goToUpload() {
   closeModal();
-  const p = projects[currentProjectIdx];
-  goToUploadFor(p.name);
+  const p = _projectsList[currentProjectIdx];
+  if (p) goToUploadFor(p.name);
 }
 
 // ═══════════ INVOICES ═══════════
+let _currentInvFilter = 'all';
+
 function renderInvoices(list) {
-  const tbody = document.getElementById('invoices-tbody');
-  const fmt = n => '$' + n.toLocaleString();
-  tbody.innerHTML = list.map(inv => {
-    const sc = { Paid:'status-paid', Pending:'status-pending', Overdue:'status-overdue' }[inv.status] || '';
-    return `<tr data-status="${inv.status}">
-      <td class="td-strong" style="font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em">${inv.id}</td>
-      <td>${inv.project}</td>
-      <td class="td-muted">${inv.type}</td>
-      <td class="amount-cell">${fmt(inv.amount)}</td>
-      <td class="td-muted">${inv.date}</td>
-      <td class="td-muted">${inv.due}</td>
+  const wrap = document.getElementById('invoices-wrap');
+  if (!list) list = getInvoices(_session.email, _isAdmin);
+  if (!list.length) {
+    wrap.innerHTML = emptyState(emptyInvIcon, 'No Invoices Yet', _isAdmin ? 'Click "Add Invoice" to create the first invoice.' : 'No invoices have been issued yet.');
+    return;
+  }
+  wrap.innerHTML = `<div class="report-table-wrap"><table class="data-table"><thead><tr>
+    <th>Invoice #</th><th>Project</th><th>Type</th><th>Amount</th><th>Issued</th><th>Due</th><th>Status</th><th>Action</th>
+  </tr></thead><tbody>${list.map(inv => {
+    const sc = {Paid:'status-paid',Pending:'status-pending',Overdue:'status-overdue'}[inv.status]||'';
+    return `<tr><td class="td-strong" style="font-family:'Barlow Condensed',sans-serif">${inv.id}</td>
+      <td>${inv.project}</td><td class="td-muted">${inv.type}</td>
+      <td class="amount-cell">${fmtAmt(inv.amount)}</td>
+      <td class="td-muted">${inv.date}</td><td class="td-muted">${inv.due}</td>
       <td><span class="status-badge ${sc}">${inv.status}</span></td>
-      <td>
-        <button class="inv-action-btn" onclick="downloadInvoice('${inv.id}','${inv.project}','$${inv.amount.toLocaleString()}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          PDF
-        </button>
-      </td>
-    </tr>`;
-  }).join('');
+      <td><button class="inv-action-btn" onclick="downloadInvoice('${inv.id}','${inv.project}','${fmtAmt(inv.amount)}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>PDF
+      </button></td></tr>`;
+  }).join('')}</tbody></table></div>`;
 }
 
 function downloadInvoice(id, project, amount) {
   showToast(`Downloading ${id}.pdf…`);
-  sendNotification(
-    `Invoice Downloaded — ${id}`,
-    `Invoice ${id} (${project} · ${amount}) was downloaded by ${(JSON.parse(sessionStorage.getItem('ev_user')||'{}').company) || 'a partner'}.`
-  );
+  sendNotification(`Invoice Downloaded — ${id}`, `Invoice ${id} (${project} · ${amount}) was downloaded by ${_session.company||'a partner'}.`);
 }
 
 function filterInvoices(status, btn) {
+  _currentInvFilter = status;
   document.querySelectorAll('#inv-filters .filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const filtered = status === 'all' ? invoices : invoices.filter(i => i.status === status);
-  renderInvoices(filtered);
+  const all = getInvoices(_session.email, _isAdmin);
+  renderInvoices(status === 'all' ? all : all.filter(i => i.status === status));
+}
+
+// ═══════════ REPORTS ═══════════
+function renderReports() {
+  const myProjects = getProjects(_session.email, _isAdmin);
+  const myInvoices = getInvoices(_session.email, _isAdmin);
+  const totalRev   = myProjects.reduce((s,p)=>s+(parseFloat(String(p.amount||'').replace(/[^0-9.]/g,''))||0),0);
+  const paidInv    = myInvoices.filter(i=>i.status==='Paid').reduce((s,i)=>s+Number(i.amount||0),0);
+
+  document.getElementById('report-kpis').innerHTML = `
+    <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="23,6 13.5,15.5 8.5,10.5 1,18"/></svg></div></div>
+      <div class="kpi-val">${totalRev>0?'$'+(totalRev/1000).toFixed(0)+'K':'$0'}</div><div class="kpi-label">Total Contract Value</div>
+    </div>
+    <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div></div>
+      <div class="kpi-val">${paidInv>0?'$'+(paidInv/1000).toFixed(0)+'K':'$0'}</div><div class="kpi-label">Total Paid</div>
+    </div>
+    <div class="kpi-card" style="--accent:#8B5CF6;--icon-bg:rgba(139,92,246,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div></div>
+      <div class="kpi-val">${myProjects.length}</div><div class="kpi-label">Total Projects</div>
+    </div>`;
+
+  // Table by type
+  const wrap = document.getElementById('report-table-wrap');
+  if (!myProjects.length) { wrap.innerHTML = ''; document.getElementById('report-chart-wrap').innerHTML = ''; return; }
+  const byType = {};
+  myProjects.forEach(p => {
+    if (!byType[p.type]) byType[p.type] = { count:0, val:0 };
+    byType[p.type].count++;
+    byType[p.type].val += parseFloat(String(p.amount||'').replace(/[^0-9.]/g,''))||0;
+  });
+  wrap.innerHTML = `<div class="report-table-wrap"><table class="data-table"><thead><tr><th>Project Type</th><th>Projects</th><th>Contract Value</th><th>Status</th></tr></thead><tbody>
+    ${myProjects.map(p=>`<tr><td class="td-strong">${p.name}</td><td class="td-muted">${p.type}</td><td class="amount-cell green">${p.amount||'—'}</td><td><span class="status-badge ${getStatusClass(p.status)}">${p.status}</span></td></tr>`).join('')}
+  </tbody></table></div>`;
+  document.getElementById('report-chart-wrap').innerHTML = '';
+}
+
+// ═══════════ LABOR ═══════════
+function renderLabor() {
+  const myProjects = getProjects(_session.email, _isAdmin);
+  const myInvoices = getInvoices(_session.email, _isAdmin);
+  const totalInv   = myInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
+  const paidInv    = myInvoices.filter(i=>i.status==='Paid').reduce((s,i)=>s+Number(i.amount||0),0);
+  const pendInv    = totalInv - paidInv;
+
+  document.getElementById('labor-kpis').innerHTML = `
+    <div class="kpi-card" style="--accent:#FF810E;--icon-bg:rgba(255,129,14,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div></div>
+      <div class="kpi-val">${fmtAmt(totalInv)}</div><div class="kpi-label">Total Invoiced</div>
+    </div>
+    <div class="kpi-card" style="--accent:#10B981;--icon-bg:rgba(16,185,129,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20,6 9,17 4,12"/></svg></div></div>
+      <div class="kpi-val">${fmtAmt(paidInv)}</div><div class="kpi-label">Paid &amp; Settled</div>
+    </div>
+    <div class="kpi-card" style="--accent:#F59E0B;--icon-bg:rgba(245,158,11,.1)">
+      <div class="kpi-top"><div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div></div>
+      <div class="kpi-val">${fmtAmt(pendInv)}</div><div class="kpi-label">Outstanding</div>
+    </div>`;
+
+  const wrap = document.getElementById('labor-table-wrap');
+  if (!myInvoices.length) { wrap.innerHTML = emptyState(emptyInvIcon, 'No Labor Data Yet', 'Labor records will appear once invoices are added.'); return; }
+  wrap.innerHTML = `<div class="report-table-wrap"><table class="data-table"><thead><tr>
+    <th>Project</th><th>Invoice Type</th><th>Amount</th><th>Issue Date</th><th>Due Date</th><th>Status</th>
+  </tr></thead><tbody>${myInvoices.map(inv=>`<tr>
+    <td class="td-strong">${inv.project}</td><td class="td-muted">${inv.type}</td>
+    <td class="amount-cell">${fmtAmt(inv.amount)}</td>
+    <td class="td-muted">${inv.date}</td><td class="td-muted">${inv.due}</td>
+    <td><span class="status-badge ${{Paid:'status-paid',Pending:'status-pending',Overdue:'status-overdue'}[inv.status]||''}">${inv.status}</span></td>
+  </tr>`).join('')}</tbody></table></div>`;
+}
+
+// ═══════════ PARTNERS VIEW (admin) ═══════════
+function renderPartners() {
+  const partners = getPartnerPartners();
+  const allProjects = dbGet('ev_db_projects');
+  const allInvoices = dbGet('ev_db_invoices');
+  const grid = document.getElementById('partners-grid');
+  grid.innerHTML = partners.map(p => {
+    const projCount = allProjects.filter(x => x.partnerEmail === p.email).length;
+    const invCount  = allInvoices.filter(x => x.partnerEmail === p.email).length;
+    return `<div class="partner-card">
+      <div class="partner-card-top">
+        <div class="pc-avatar">${p.initials}</div>
+        <div><div class="pc-name">${p.company}</div><div class="pc-role">Partner Account</div></div>
+      </div>
+      <div class="partner-card-body">
+        <div class="pc-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>${p.email}</div>
+        <div class="pc-stats">
+          <div><div class="pc-stat-val">${projCount}</div><div class="pc-stat-label">Projects</div></div>
+          <div><div class="pc-stat-val">${invCount}</div><div class="pc-stat-label">Invoices</div></div>
+        </div>
+      </div>
+      <div class="partner-card-footer">
+        <button class="pc-btn primary" onclick="openAddProjectForPartner('${p.email}')">+ Add Project</button>
+        <button class="pc-btn" onclick="openAddInvoiceForPartner('${p.email}')">+ Invoice</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openAddProjectForPartner(email) {
+  openAdminModal('project');
+  setTimeout(() => { const sel = document.getElementById('ap-partner'); if(sel) sel.value = email; }, 50);
+}
+function openAddInvoiceForPartner(email) {
+  openAdminModal('invoice');
+  setTimeout(() => {
+    const sel = document.getElementById('ai-project');
+    if(sel) {
+      const projs = dbGet('ev_db_projects').filter(p => p.partnerEmail === email);
+      sel.innerHTML = '<option value="">— Select project —</option>' + projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    }
+  }, 50);
+}
+
+// ═══════════ ADMIN MODALS ═══════════
+function openAdminModal(type) {
+  if (type === 'project') {
+    // Populate partner selector
+    const sel = document.getElementById('ap-partner');
+    const partners = getPartnerPartners();
+    sel.innerHTML = '<option value="">— Select partner —</option>' + partners.map(p=>`<option value="${p.email}">${p.company}</option>`).join('');
+    document.getElementById('modal-add-project').classList.add('open');
+  } else if (type === 'invoice') {
+    // Populate project selector
+    const sel = document.getElementById('ai-project');
+    const projs = _isAdmin ? dbGet('ev_db_projects') : getProjects(_session.email, false);
+    sel.innerHTML = '<option value="">— Select project —</option>' + projs.map(p=>`<option value="${p.id}" data-partner="${p.partnerEmail}">${p.name}</option>`).join('');
+    document.getElementById('modal-add-invoice').classList.add('open');
+  } else if (type === 'partner') {
+    document.getElementById('modal-add-partner').classList.add('open');
+  }
+}
+
+function closeAdminModal(type) {
+  document.getElementById('modal-add-' + type).classList.remove('open');
+}
+
+function saveProject() {
+  const name     = document.getElementById('ap-name').value.trim();
+  const partner  = document.getElementById('ap-partner').value;
+  if (!name || !partner) { showToast('Please fill in project name and partner.'); return; }
+  const id = 'P-' + Date.now();
+  const proj = {
+    id, name,
+    type:     document.getElementById('ap-type').value,
+    status:   document.getElementById('ap-status').value,
+    progress: parseInt(document.getElementById('ap-progress').value)||0,
+    loc:      document.getElementById('ap-loc').value.trim() || 'Las Vegas, NV',
+    pm:       document.getElementById('ap-pm').value.trim()  || 'Everlast Team',
+    amount:   document.getElementById('ap-amount').value.trim() || '$0',
+    start:    document.getElementById('ap-start').value.trim(),
+    end:      document.getElementById('ap-end').value.trim(),
+    desc:     document.getElementById('ap-desc').value.trim(),
+    partnerEmail: partner,
+    uploads: [],
+    createdAt: new Date().toISOString()
+  };
+  const projects = dbGet('ev_db_projects');
+  projects.push(proj);
+  dbSet('ev_db_projects', projects);
+  const partnerInfo = getAllPartners().find(p => p.email === partner);
+  addActivity(partner, `New project assigned: <strong>${name}</strong>`);
+  sendNotification(`New Project — ${name}`, `Project "${name}" was assigned to ${partnerInfo?.company || partner}.`);
+  closeAdminModal('project');
+  // Reset form
+  ['ap-name','ap-loc','ap-pm','ap-amount','ap-start','ap-end','ap-desc'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  document.getElementById('ap-progress').value = '0';
+  showToast('Project saved successfully!');
+  renderProjects();
+  renderOverview();
+  renderPartners();
+  populateUploadSelector();
+}
+
+function saveInvoice() {
+  const projSel  = document.getElementById('ai-project');
+  const projId   = projSel.value;
+  const projName = projSel.options[projSel.selectedIndex]?.text || '';
+  const amount   = document.getElementById('ai-amount').value;
+  if (!projId || !amount) { showToast('Please select a project and enter an amount.'); return; }
+  // Get partner email from project
+  const projects = dbGet('ev_db_projects');
+  const proj     = projects.find(p => p.id === projId);
+  const partnerEmail = proj?.partnerEmail || '';
+  const nextNum  = (dbGet('ev_db_invoices').length + 1).toString().padStart(4,'0');
+  const inv = {
+    id:           'INV-' + new Date().getFullYear() + '-' + nextNum,
+    project:      projName,
+    projectId:    projId,
+    type:         document.getElementById('ai-type').value,
+    amount:       parseFloat(amount),
+    date:         document.getElementById('ai-date').value.trim() || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    due:          document.getElementById('ai-due').value.trim()  || '',
+    status:       document.getElementById('ai-status').value,
+    partnerEmail: partnerEmail,
+    createdAt:    new Date().toISOString()
+  };
+  const invoices = dbGet('ev_db_invoices');
+  invoices.push(inv);
+  dbSet('ev_db_invoices', invoices);
+  addActivity(partnerEmail, `Invoice <strong>${inv.id}</strong> issued — ${fmtAmt(inv.amount)}`);
+  sendNotification(`New Invoice — ${inv.id}`, `Invoice ${inv.id} for ${projName} · ${fmtAmt(inv.amount)} was created.`);
+  closeAdminModal('invoice');
+  ['ai-amount','ai-date','ai-due'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  showToast('Invoice created!');
+  renderInvoices();
+  renderOverview();
+  renderPartners();
+}
+
+function savePartner() {
+  const company  = document.getElementById('addp-company').value.trim();
+  const name     = document.getElementById('addp-name').value.trim();
+  const email    = document.getElementById('addp-email').value.trim().toLowerCase();
+  const password = document.getElementById('addp-password').value.trim();
+  if (!company || !email || !password) { showToast('Please fill in all required fields.'); return; }
+  const initials = name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2) || company.slice(0,2).toUpperCase();
+  const existing = getAllPartners();
+  if (existing.find(p => p.email === email)) { showToast('A partner with that email already exists.'); return; }
+  const newPartner = { email, name, company, initials, role:'partner', password, createdAt: new Date().toISOString() };
+  const dynamic = dbGet('ev_db_partners');
+  dynamic.push(newPartner);
+  dbSet('ev_db_partners', dynamic);
+  closeAdminModal('partner');
+  ['addp-company','addp-name','addp-email','addp-password'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
+  showToast(`Partner "${company}" created!`);
+  renderPartners();
 }
 
 // ═══════════ UPLOAD ═══════════
+function populateUploadSelector() {
+  const sel = document.getElementById('upload-project');
+  const projs = getProjects(_session.email, _isAdmin);
+  sel.innerHTML = '<option value="">— Choose a project —</option>' + projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+  renderRecentUploads();
+}
+
+function renderRecentUploads() {
+  const projs = getProjects(_session.email, _isAdmin);
+  const allUploads = projs.flatMap(p => (p.uploads||[]).map(u=>({...u, projectName:p.name})));
+  const el = document.getElementById('recent-uploads-list');
+  if (!allUploads.length) { el.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--ash);font-size:.88rem">No uploads yet. Add files to a project above.</div>`; return; }
+  el.innerHTML = allUploads.slice(0,8).map(f=>`<div class="upload-file-item">
+    <div class="file-icon ${f.type==='photo'?'photo':'doc'}">
+      ${f.type==='photo'
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>'}
+    </div>
+    <div class="file-info"><div class="file-name">${f.name}</div><div class="file-meta">${f.projectName} · ${f.date}</div></div>
+  </div>`).join('');
+}
+
 function goToUploadFor(projectName) {
   showView('upload', 'Upload Files', document.querySelector('[data-view="upload"]'));
   const sel = document.getElementById('upload-project');
   for (let opt of sel.options) {
-    if (opt.text.includes(projectName.substring(0, 15))) { sel.value = opt.value; break; }
+    if (opt.text.toLowerCase().includes(projectName.substring(0,15).toLowerCase())) { sel.value = opt.value; break; }
   }
 }
 
 function handleFileSelect(e) {
   const files = Array.from(e.target.files);
   const el = document.getElementById('selected-files');
-  if (files.length) {
-    el.textContent = files.map(f => f.name).join(', ') + ` (${files.length} file${files.length>1?'s':''} selected)`;
-  }
+  if (files.length) el.textContent = files.map(f=>f.name).join(', ') + ` (${files.length} file${files.length>1?'s':''} selected)`;
 }
 
 function submitUpload() {
-  const projSel   = document.getElementById('upload-project');
-  const projName  = projSel.options[projSel.selectedIndex]?.text || '';
-  const fileType  = document.getElementById('upload-type').value;
-  const notes     = document.getElementById('upload-notes').value.trim();
-  const filesText = document.getElementById('selected-files').textContent;
+  const projSel  = document.getElementById('upload-project');
+  const projId   = projSel.value;
+  const projName = projSel.options[projSel.selectedIndex]?.text || '';
+  const fileType = document.getElementById('upload-type').value;
+  const notes    = document.getElementById('upload-notes').value.trim();
+  const filesText= document.getElementById('selected-files').textContent;
+  if (!projId) { showToast('Please select a project first.'); return; }
 
-  if (!projSel.value) { showToast('Please select a project first.'); return; }
+  // Save upload records to project
+  const fileNames = filesText ? filesText.split(',').map(n=>n.trim().replace(/\s*\(\d+ files? selected\)/,'')) : ['File'];
+  const projects  = dbGet('ev_db_projects');
+  const pidx      = projects.findIndex(p => p.id === projId);
+  if (pidx >= 0) {
+    if (!projects[pidx].uploads) projects[pidx].uploads = [];
+    fileNames.forEach(n => {
+      if (n) projects[pidx].uploads.unshift({ name:n, type: fileType.toLowerCase().includes('photo')?'photo':'doc', date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), size:'—' });
+    });
+    dbSet('ev_db_projects', projects);
+    addActivity(projects[pidx].partnerEmail, `Files uploaded to <strong>${projName}</strong>`);
+  }
 
+  sendNotification(`New Upload — ${projName}`, `File type: ${fileType}\nProject: ${projName}\nFiles: ${filesText||'upload'}\nNotes: ${notes||'(none)'}`);
   showToast('Files uploaded successfully!');
-
-  // Email notification → everlastgcus@gmail.com
-  sendNotification(
-    `New Upload — ${projName}`,
-    `File type: ${fileType}\nProject: ${projName}\nFiles: ${filesText || 'Drag-and-drop upload'}\nNotes: ${notes || '(none)'}`
-  );
-
   document.getElementById('upload-notes').value = '';
   document.getElementById('selected-files').textContent = '';
   document.getElementById('file-input').value = '';
+  renderRecentUploads();
 }
 
 // Drag & drop
@@ -1468,29 +1785,6 @@ zone.addEventListener('drop', e => {
     showToast('Files ready to upload.');
   }
 });
-
-// ═══════════ CHART ═══════════
-function renderChart() {
-  const data = [
-    { month:'Sep 25', amount:97300, max:false },
-    { month:'Oct 25', amount:81200, max:false },
-    { month:'Nov 25', amount:52400, max:false },
-    { month:'Dec 25', amount:44800, max:false },
-    { month:'Jan 26', amount:89600, max:false },
-    { month:'Feb 26', amount:63200, max:true  }
-  ];
-  const maxVal = Math.max(...data.map(d => d.amount));
-  document.getElementById('chart-bars').innerHTML = data.map(d => {
-    const pct = Math.round((d.amount / maxVal) * 90);
-    const label = '$' + (d.amount / 1000).toFixed(1) + 'K';
-    return `
-      <div class="chart-bar">
-        <div class="bar-amount">${label}</div>
-        <div class="bar-fill ${d.max?'current':''}" style="height:${pct}%"></div>
-        <div class="bar-month">${d.month}</div>
-      </div>`;
-  }).join('');
-}
 
 // ═══════════ TOAST ═══════════
 let toastTimer;
@@ -1541,33 +1835,47 @@ function sendNotification(subject, message) {
   }).catch(() => {}); // fail silently — never block the UI
 }
 
-// ═══════════ SESSION PERSONALISATION ═══════════
+// ═══════════ SESSION ═══════════
 const _session = JSON.parse(sessionStorage.getItem('ev_user') || '{}');
 const _isAdmin = _session.role === 'admin';
 
-// Redirect to login if no session
 if (!_session.email) { window.location.href = 'partner-login.html'; }
 
-// Personalise sidebar partner card
+// Personalise UI
 if (_session.name)    { document.querySelectorAll('.partner-name').forEach(el => el.textContent = _session.name); }
 if (_session.company) { document.querySelectorAll('.partner-co').forEach(el => el.textContent = _session.company); }
 if (_session.initials){ document.querySelectorAll('.partner-avatar, .topbar-user-avatar').forEach(el => el.textContent = _session.initials); }
-if (_session.name)    { document.querySelectorAll('.topbar-user-name').forEach(el => el.textContent = _session.name.split(' ')[0] + ' ' + (_session.name.split(' ')[1]?.[0] || '') + '.'); }
-
-// Personalise overview greeting
-const greetEl = document.querySelector('#view-overview .view-header p');
+if (_session.name)    { document.querySelectorAll('.topbar-user-name').forEach(el => el.textContent = _session.name.split(' ')[0] + ' ' + (_session.name.split(' ')[1]?.[0]||'') + '.'); }
+const greetEl = document.getElementById('overview-greeting');
 if (greetEl && _session.name) greetEl.textContent = `Welcome back, ${_session.name.split(' ')[0]}. Here's what's happening with your projects today.`;
 
+// Admin-only UI elements
+if (_isAdmin) {
+  document.getElementById('btn-add-project').style.display = '';
+  document.getElementById('btn-add-invoice').style.display = '';
+  // Inject Partners nav link
+  document.getElementById('admin-nav-items').innerHTML = `
+    <div class="sidebar-section-title">Admin</div>
+    <div class="sidebar-link" data-view="partners" onclick="showView('partners','Partners',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      Partners
+    </div>`;
+}
+
+// Close admin modals on overlay click
+['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
+});
+
 // Send login notification
-sendNotification(
-  `Portal Login — ${_session.company}`,
-  `${_session.name} (${_session.email}) signed in to the Everlast Partner Portal.`
-);
+sendNotification(`Portal Login — ${_session.company}`, `${_session.name} (${_session.email}) signed in to the Everlast Partner Portal.`);
 
 // ═══════════ INIT ═══════════
-renderProjects(projects);
-renderInvoices(invoices);
-renderChart();
+renderOverview();
+renderProjects();
+renderInvoices();
+populateUploadSelector();
 </script>
 </body>
 </html>

@@ -411,7 +411,10 @@
       const btn      = document.getElementById('sign-in-btn');
       const errEl    = document.getElementById('login-error');
 
-      const match = USERS.find(u => u.email === email && u.password === password);
+      // Also check dynamically-added partners from admin panel
+      const dynamicPartners = JSON.parse(localStorage.getItem('ev_db_partners') || '[]');
+      const ALL_USERS = [...USERS, ...dynamicPartners];
+      const match = ALL_USERS.find(u => u.email === email && u.password === password);
 
       if (!match) {
         errEl.style.display = 'flex';
