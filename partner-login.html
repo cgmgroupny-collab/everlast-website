@@ -374,64 +374,54 @@
   <!-- Copyright -->
   <p class="login-copyright">© 2026 Everlast General Contracting · Las Vegas, NV · All rights reserved.</p>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // ── Partner accounts ─────────────────────────────────────────
-    // To add more partners: copy a line below and update email/password/name/company/role
-    const USERS = [
-      {
-        email:    'admin@everlastgc.com',
-        password: 'Everlast2026!',
-        name:     'Everlast Admin',
-        company:  'Everlast General Contracting',
-        initials: 'EA',
-        role:     'admin'       // admin sees extra controls
-      },
-      {
-        email:    'admin@valleyconstruction.com',
-        password: 'Valley2026!',
-        name:     'Valley Admin',
-        company:  'Valley Construction',
-        initials: 'VC',
-        role:     'partner'
-      },
-      {
-        email:    'admin@quantumgc.com',
-        password: 'Quantum2026!',
-        name:     'Quantum Admin',
-        company:  'Quantum General Contracting',
-        initials: 'QG',
-        role:     'partner'
-      }
-    ];
+    const { createClient } = supabase;
+    const sb = createClient(
+      'https://fdruyufcuuuigskcrnby.supabase.co',
+      'sb_publishable_qkDU1c2O5ad2GmLC4cTigw_7quZBA5y'
+    );
 
-    function handleLogin(e) {
+    // If already logged in, skip to dashboard
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) window.location.href = 'partner-dashboard.html';
+    });
+
+    async function handleLogin(e) {
       e.preventDefault();
       const email    = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
       const btn      = document.getElementById('sign-in-btn');
       const errEl    = document.getElementById('login-error');
 
-      // Also check dynamically-added partners from admin panel
-      const dynamicPartners = JSON.parse(localStorage.getItem('ev_db_partners') || '[]');
-      const ALL_USERS = [...USERS, ...dynamicPartners];
-      const match = ALL_USERS.find(u => u.email === email && u.password === password);
+      btn.innerHTML  = 'Signing in&hellip;';
+      btn.style.opacity = '.7';
+      btn.disabled   = true;
 
-      if (!match) {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) {
         errEl.style.display = 'flex';
         document.getElementById('password').style.borderColor = '#EF4444';
         setTimeout(() => { document.getElementById('password').style.borderColor = ''; }, 2000);
+        btn.innerHTML = 'Sign In to Portal <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.style.opacity = '';
+        btn.disabled = false;
         return;
       }
 
-      // Save session so dashboard personalises correctly
-      sessionStorage.setItem('ev_user', JSON.stringify(match));
+      // Fetch profile for name/company/role
+      const { data: profile } = await sb.from('profiles').select('*').eq('id', data.user.id).single();
+      sessionStorage.setItem('ev_user', JSON.stringify({
+        id:       data.user.id,
+        email:    profile?.email    || email,
+        name:     profile?.name     || 'Partner',
+        company:  profile?.company  || '',
+        initials: profile?.initials || '??',
+        role:     profile?.role     || 'partner'
+      }));
 
-      errEl.style.display = 'none';
-      btn.innerHTML = 'Signing in&hellip;';
-      btn.style.opacity = '.7';
-      btn.style.cursor = 'not-allowed';
-      btn.disabled = true;
-      setTimeout(() => { window.location.href = 'partner-dashboard.html'; }, 1000);
+      window.location.href = 'partner-dashboard.html';
     }
 
     // Forgot password

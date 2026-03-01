@@ -800,7 +800,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
           Settings
         </div>
-        <div class="sidebar-link" onclick="sessionStorage.removeItem('ev_user');window.location.href='partner-login.html'">
+        <div class="sidebar-link" onclick="sb.auth.signOut().then(()=>{sessionStorage.removeItem('ev_user');window.location.href='partner-login.html';})">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16,17 21,12 16,7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
           Sign Out
         </div>
@@ -1178,42 +1178,63 @@
   <span id="toast-msg">Action completed.</span>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ═══════════ BASE PARTNERS (hardcoded) ═══════════
-const BASE_PARTNERS = [
-  { email:'admin@everlastgc.com',         name:'Everlast Admin',  company:'Everlast General Contracting', initials:'EA', role:'admin'   },
-  { email:'admin@valleyconstruction.com', name:'Valley Admin',    company:'Valley Construction',          initials:'VC', role:'partner' },
-  { email:'admin@quantumgc.com',          name:'Quantum Admin',   company:'Quantum General Contracting',  initials:'QG', role:'partner' }
-];
+// ═══════════ SUPABASE ═══════════
+const { createClient } = supabase;
+const sb = createClient(
+  'https://fdruyufcuuuigskcrnby.supabase.co',
+  'sb_publishable_qkDU1c2O5ad2GmLC4cTigw_7quZBA5y'
+);
 
-// ═══════════ localStorage DB helpers ═══════════
-function dbGet(key) { try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch(e){ return []; } }
-function dbSet(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
-
-function getAllPartners() {
-  const dynamic = dbGet('ev_db_partners');
-  return [...BASE_PARTNERS, ...dynamic];
+// ═══════════ DB HELPERS (async Supabase) ═══════════
+async function getAllPartners() {
+  const { data } = await sb.from('profiles').select('*').order('company');
+  return data || [];
 }
-function getPartnerPartners() {
-  return getAllPartners().filter(p => p.role === 'partner');
+async function getPartnerPartners() {
+  const { data } = await sb.from('profiles').select('*').eq('role','partner').order('company');
+  return data || [];
 }
-function getProjects(email, isAdmin) {
-  const all = dbGet('ev_db_projects');
-  return isAdmin ? all : all.filter(p => p.partnerEmail === email);
+async function getProjects(userId, isAdmin) {
+  let q = sb.from('projects').select('*').order('created_at', { ascending: false });
+  if (!isAdmin) q = q.eq('partner_id', userId);
+  const { data, error } = await q;
+  if (error) console.error('getProjects:', error);
+  return (data || []).map(p => ({
+    ...p,
+    loc:     p.location    || 'Las Vegas, NV',
+    start:   p.start_date  || '—',
+    end:     p.end_date    || '—',
+    desc:    p.description || '',
+    uploads: p.uploads     || []
+  }));
 }
-function getInvoices(email, isAdmin) {
-  const all = dbGet('ev_db_invoices');
-  return isAdmin ? all : all.filter(i => i.partnerEmail === email);
+async function getInvoices(userId, isAdmin) {
+  let q = sb.from('invoices').select('*').order('created_at', { ascending: false });
+  if (!isAdmin) q = q.eq('partner_id', userId);
+  const { data, error } = await q;
+  if (error) console.error('getInvoices:', error);
+  return (data || []).map(i => ({
+    ...i,
+    project: i.project_name || '—',
+    date:    i.issue_date   || '—',
+    due:     i.due_date     || '—'
+  }));
 }
-function getActivity(email, isAdmin) {
-  const all = dbGet('ev_db_activity');
-  return isAdmin ? all : all.filter(a => a.partnerEmail === email);
+async function getActivity(userId, isAdmin) {
+  let q = sb.from('activity').select('*').order('created_at', { ascending: false }).limit(50);
+  if (!isAdmin) q = q.eq('partner_id', userId);
+  const { data } = await q;
+  return (data || []).map(a => ({ ...a, time: a.created_at }));
 }
-function addActivity(partnerEmail, text) {
-  const acts = dbGet('ev_db_activity');
-  acts.unshift({ partnerEmail, text, time: new Date().toISOString() });
-  if (acts.length > 50) acts.length = 50;
-  dbSet('ev_db_activity', acts);
+async function addActivity(partnerId, text) {
+  await sb.from('activity').insert({
+    id: 'ACT-' + Date.now(),
+    partner_id: partnerId,
+    text,
+    created_at: new Date().toISOString()
+  }).catch(() => {});
 }
 
 // ═══════════ TYPE STYLES ═══════════
@@ -1250,9 +1271,9 @@ function showView(viewId, title, el) {
     if (!_isAdmin) { showView('overview','Dashboard',document.querySelector('[data-view="overview"]')); return; }
     renderPartners();
   }
-  if (viewId === 'reports')  renderReports();
-  if (viewId === 'labor')    renderLabor();
-  if (viewId === 'upload')   populateUploadSelector();
+  if (viewId === 'reports')  renderReports();   // async, fire-and-forget ok
+  if (viewId === 'labor')    renderLabor();     // async, fire-and-forget ok
+  if (viewId === 'upload')   populateUploadSelector(); // async, fire-and-forget ok
 }
 function toggleSidebar() {
   document.getElementById('portal-sidebar').classList.toggle('open');
@@ -1277,9 +1298,9 @@ const emptyProjIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor
 const emptyInvIcon  = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>`;
 
 // ═══════════ OVERVIEW ═══════════
-function renderOverview() {
-  const myProjects = getProjects(_session.email, _isAdmin);
-  const myInvoices = getInvoices(_session.email, _isAdmin);
+async function renderOverview() {
+  const myProjects = await getProjects(_session.id, _isAdmin);
+  const myInvoices = await getInvoices(_session.id, _isAdmin);
   const active     = myProjects.filter(p => p.status === 'In Progress' || p.status === 'Pending');
   const totalRev   = myProjects.reduce((s, p) => s + (parseFloat(String(p.amount||'').replace(/[^0-9.]/g,''))||0), 0);
   const openInvAmt = myInvoices.filter(i => i.status !== 'Paid').reduce((s,i) => s + Number(i.amount||0), 0);
@@ -1318,7 +1339,7 @@ function renderOverview() {
   }
 
   // Activity feed
-  const acts = getActivity(_session.email, _isAdmin);
+  const acts = await getActivity(_session.id, _isAdmin);
   const actEl = document.getElementById('overview-activity');
   if (!acts.length) {
     actEl.innerHTML = emptyState(`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>`, 'No Activity Yet', 'Activity will appear here as projects are updated.');
@@ -1352,8 +1373,8 @@ function timeAgo(iso) {
 // ═══════════ PROJECTS ═══════════
 let _projectsList = [];
 
-function renderProjects(list) {
-  _projectsList = list !== undefined ? list : getProjects(_session.email, _isAdmin);
+async function renderProjects(list) {
+  _projectsList = list !== undefined ? list : await getProjects(_session.id, _isAdmin);
   const grid = document.getElementById('project-grid');
   if (!_projectsList.length) {
     grid.innerHTML = emptyState(emptyProjIcon, 'No Projects Yet', _isAdmin ? 'Click "Add Project" to create your first project.' : 'No projects have been assigned to your account yet.');
@@ -1391,10 +1412,10 @@ function renderProjects(list) {
   }).join('');
 }
 
-function filterProjects(type, btn) {
+async function filterProjects(type, btn) {
   document.querySelectorAll('#proj-filters .filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const all = getProjects(_session.email, _isAdmin);
+  const all = await getProjects(_session.id, _isAdmin);
   renderProjects(type === 'all' ? all : all.filter(p => p.type === type));
 }
 
@@ -1445,9 +1466,9 @@ function goToUpload() {
 // ═══════════ INVOICES ═══════════
 let _currentInvFilter = 'all';
 
-function renderInvoices(list) {
+async function renderInvoices(list) {
   const wrap = document.getElementById('invoices-wrap');
-  if (!list) list = getInvoices(_session.email, _isAdmin);
+  if (!list) list = await getInvoices(_session.id, _isAdmin);
   if (!list.length) {
     wrap.innerHTML = emptyState(emptyInvIcon, 'No Invoices Yet', _isAdmin ? 'Click "Add Invoice" to create the first invoice.' : 'No invoices have been issued yet.');
     return;
@@ -1472,18 +1493,18 @@ function downloadInvoice(id, project, amount) {
   sendNotification(`Invoice Downloaded — ${id}`, `Invoice ${id} (${project} · ${amount}) was downloaded by ${_session.company||'a partner'}.`);
 }
 
-function filterInvoices(status, btn) {
+async function filterInvoices(status, btn) {
   _currentInvFilter = status;
   document.querySelectorAll('#inv-filters .filter-tab').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const all = getInvoices(_session.email, _isAdmin);
+  const all = await getInvoices(_session.id, _isAdmin);
   renderInvoices(status === 'all' ? all : all.filter(i => i.status === status));
 }
 
 // ═══════════ REPORTS ═══════════
-function renderReports() {
-  const myProjects = getProjects(_session.email, _isAdmin);
-  const myInvoices = getInvoices(_session.email, _isAdmin);
+async function renderReports() {
+  const myProjects = await getProjects(_session.id, _isAdmin);
+  const myInvoices = await getInvoices(_session.id, _isAdmin);
   const totalRev   = myProjects.reduce((s,p)=>s+(parseFloat(String(p.amount||'').replace(/[^0-9.]/g,''))||0),0);
   const paidInv    = myInvoices.filter(i=>i.status==='Paid').reduce((s,i)=>s+Number(i.amount||0),0);
 
@@ -1517,9 +1538,9 @@ function renderReports() {
 }
 
 // ═══════════ LABOR ═══════════
-function renderLabor() {
-  const myProjects = getProjects(_session.email, _isAdmin);
-  const myInvoices = getInvoices(_session.email, _isAdmin);
+async function renderLabor() {
+  const myProjects = await getProjects(_session.id, _isAdmin);
+  const myInvoices = await getInvoices(_session.id, _isAdmin);
   const totalInv   = myInvoices.reduce((s,i)=>s+Number(i.amount||0),0);
   const paidInv    = myInvoices.filter(i=>i.status==='Paid').reduce((s,i)=>s+Number(i.amount||0),0);
   const pendInv    = totalInv - paidInv;
@@ -1551,15 +1572,19 @@ function renderLabor() {
 }
 
 // ═══════════ PARTNERS VIEW (admin) ═══════════
-function renderPartners() {
+async function renderPartners() {
   if (!_isAdmin) return; // hard block — non-admins cannot execute this function
-  const partners = getPartnerPartners();
-  const allProjects = dbGet('ev_db_projects');
-  const allInvoices = dbGet('ev_db_invoices');
+  const partners = await getPartnerPartners();
+  const { data: allProjects } = await sb.from('projects').select('partner_id');
+  const { data: allInvoices } = await sb.from('invoices').select('partner_id');
   const grid = document.getElementById('partners-grid');
+  if (!partners.length) {
+    grid.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><h3>No Partners Yet</h3><p>Click "+ Add Partner" to create a partner account.</p></div>`;
+    return;
+  }
   grid.innerHTML = partners.map(p => {
-    const projCount = allProjects.filter(x => x.partnerEmail === p.email).length;
-    const invCount  = allInvoices.filter(x => x.partnerEmail === p.email).length;
+    const projCount = (allProjects || []).filter(x => x.partner_id === p.id).length;
+    const invCount  = (allInvoices || []).filter(x => x.partner_id === p.id).length;
     return `<div class="partner-card">
       <div class="partner-card-top">
         <div class="pc-avatar">${p.initials}</div>
@@ -1573,41 +1598,39 @@ function renderPartners() {
         </div>
       </div>
       <div class="partner-card-footer">
-        <button class="pc-btn primary" onclick="openAddProjectForPartner('${p.email}')">+ Add Project</button>
-        <button class="pc-btn" onclick="openAddInvoiceForPartner('${p.email}')">+ Invoice</button>
+        <button class="pc-btn primary" onclick="openAddProjectForPartner('${p.id}')">+ Add Project</button>
+        <button class="pc-btn" onclick="openAddInvoiceForPartner('${p.id}')">+ Invoice</button>
       </div>
     </div>`;
   }).join('');
 }
 
-function openAddProjectForPartner(email) {
+function openAddProjectForPartner(partnerId) {
   openAdminModal('project');
-  setTimeout(() => { const sel = document.getElementById('ap-partner'); if(sel) sel.value = email; }, 50);
+  setTimeout(() => { const sel = document.getElementById('ap-partner'); if(sel) sel.value = partnerId; }, 200);
 }
-function openAddInvoiceForPartner(email) {
+async function openAddInvoiceForPartner(partnerId) {
   openAdminModal('invoice');
-  setTimeout(() => {
+  setTimeout(async () => {
     const sel = document.getElementById('ai-project');
-    if(sel) {
-      const projs = dbGet('ev_db_projects').filter(p => p.partnerEmail === email);
-      sel.innerHTML = '<option value="">— Select project —</option>' + projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+    if (sel) {
+      const { data: projs } = await sb.from('projects').select('id, name').eq('partner_id', partnerId);
+      sel.innerHTML = '<option value="">— Select project —</option>' + (projs||[]).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
     }
-  }, 50);
+  }, 200);
 }
 
 // ═══════════ ADMIN MODALS ═══════════
-function openAdminModal(type) {
+async function openAdminModal(type) {
   if (type === 'project') {
-    // Populate partner selector
+    const partners = await getPartnerPartners();
     const sel = document.getElementById('ap-partner');
-    const partners = getPartnerPartners();
-    sel.innerHTML = '<option value="">— Select partner —</option>' + partners.map(p=>`<option value="${p.email}">${p.company}</option>`).join('');
+    sel.innerHTML = '<option value="">— Select partner —</option>' + partners.map(p=>`<option value="${p.id}">${p.company}</option>`).join('');
     document.getElementById('modal-add-project').classList.add('open');
   } else if (type === 'invoice') {
-    // Populate project selector
     const sel = document.getElementById('ai-project');
-    const projs = _isAdmin ? dbGet('ev_db_projects') : getProjects(_session.email, false);
-    sel.innerHTML = '<option value="">— Select project —</option>' + projs.map(p=>`<option value="${p.id}" data-partner="${p.partnerEmail}">${p.name}</option>`).join('');
+    const projs = await getProjects(_session.id, _isAdmin);
+    sel.innerHTML = '<option value="">— Select project —</option>' + projs.map(p=>`<option value="${p.id}" data-partner="${p.partner_id}">${p.name}</option>`).join('');
     document.getElementById('modal-add-invoice').classList.add('open');
   } else if (type === 'partner') {
     document.getElementById('modal-add-partner').classList.add('open');
@@ -1618,108 +1641,112 @@ function closeAdminModal(type) {
   document.getElementById('modal-add-' + type).classList.remove('open');
 }
 
-function saveProject() {
-  const name     = document.getElementById('ap-name').value.trim();
-  const partner  = document.getElementById('ap-partner').value;
-  if (!name || !partner) { showToast('Please fill in project name and partner.'); return; }
+async function saveProject() {
+  const name      = document.getElementById('ap-name').value.trim();
+  const partnerId = document.getElementById('ap-partner').value;
+  if (!name || !partnerId) { showToast('Please fill in project name and partner.'); return; }
   const id = 'P-' + Date.now();
-  const proj = {
-    id, name,
-    type:     document.getElementById('ap-type').value,
-    status:   document.getElementById('ap-status').value,
-    progress: parseInt(document.getElementById('ap-progress').value)||0,
-    loc:      document.getElementById('ap-loc').value.trim() || 'Las Vegas, NV',
-    pm:       document.getElementById('ap-pm').value.trim()  || 'Everlast Team',
-    amount:   document.getElementById('ap-amount').value.trim() || '$0',
-    start:    document.getElementById('ap-start').value.trim(),
-    end:      document.getElementById('ap-end').value.trim(),
-    desc:     document.getElementById('ap-desc').value.trim(),
-    partnerEmail: partner,
-    uploads: [],
-    createdAt: new Date().toISOString()
-  };
-  const projects = dbGet('ev_db_projects');
-  projects.push(proj);
-  dbSet('ev_db_projects', projects);
-  const partnerInfo = getAllPartners().find(p => p.email === partner);
-  addActivity(partner, `New project assigned: <strong>${name}</strong>`);
-  sendNotification(`New Project — ${name}`, `Project "${name}" was assigned to ${partnerInfo?.company || partner}.`);
+  const { error } = await sb.from('projects').insert({
+    id,
+    name,
+    partner_id:  partnerId,
+    type:        document.getElementById('ap-type').value,
+    status:      document.getElementById('ap-status').value,
+    progress:    parseInt(document.getElementById('ap-progress').value) || 0,
+    location:    document.getElementById('ap-loc').value.trim()    || 'Las Vegas, NV',
+    pm:          document.getElementById('ap-pm').value.trim()     || 'Everlast Team',
+    amount:      document.getElementById('ap-amount').value.trim() || '$0',
+    start_date:  document.getElementById('ap-start').value.trim(),
+    end_date:    document.getElementById('ap-end').value.trim(),
+    description: document.getElementById('ap-desc').value.trim(),
+    uploads:     []
+  });
+  if (error) { showToast('Error saving project: ' + error.message); return; }
+  await addActivity(partnerId, `New project assigned: <strong>${name}</strong>`);
+  sendNotification(`New Project — ${name}`, `Project "${name}" was assigned to a partner.`);
   closeAdminModal('project');
-  // Reset form
   ['ap-name','ap-loc','ap-pm','ap-amount','ap-start','ap-end','ap-desc'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   document.getElementById('ap-progress').value = '0';
   showToast('Project saved successfully!');
-  renderProjects();
-  renderOverview();
-  renderPartners();
-  populateUploadSelector();
+  await renderProjects();
+  await renderOverview();
+  await renderPartners();
+  await populateUploadSelector();
 }
 
-function saveInvoice() {
+async function saveInvoice() {
   const projSel  = document.getElementById('ai-project');
   const projId   = projSel.value;
   const projName = projSel.options[projSel.selectedIndex]?.text || '';
   const amount   = document.getElementById('ai-amount').value;
   if (!projId || !amount) { showToast('Please select a project and enter an amount.'); return; }
-  // Get partner email from project
-  const projects = dbGet('ev_db_projects');
-  const proj     = projects.find(p => p.id === projId);
-  const partnerEmail = proj?.partnerEmail || '';
-  const nextNum  = (dbGet('ev_db_invoices').length + 1).toString().padStart(4,'0');
-  const inv = {
-    id:           'INV-' + new Date().getFullYear() + '-' + nextNum,
-    project:      projName,
-    projectId:    projId,
+  // Get partner_id from project
+  const { data: proj } = await sb.from('projects').select('partner_id').eq('id', projId).single();
+  const partnerId = proj?.partner_id || '';
+  // Get next invoice number
+  const { count } = await sb.from('invoices').select('*', { count:'exact', head:true });
+  const nextNum = ((count || 0) + 1).toString().padStart(4,'0');
+  const invId = 'INV-' + new Date().getFullYear() + '-' + nextNum;
+  const { error } = await sb.from('invoices').insert({
+    id:           invId,
+    partner_id:   partnerId,
+    project_id:   projId,
+    project_name: projName,
     type:         document.getElementById('ai-type').value,
     amount:       parseFloat(amount),
-    date:         document.getElementById('ai-date').value.trim() || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-    due:          document.getElementById('ai-due').value.trim()  || '',
-    status:       document.getElementById('ai-status').value,
-    partnerEmail: partnerEmail,
-    createdAt:    new Date().toISOString()
-  };
-  const invoices = dbGet('ev_db_invoices');
-  invoices.push(inv);
-  dbSet('ev_db_invoices', invoices);
-  addActivity(partnerEmail, `Invoice <strong>${inv.id}</strong> issued — ${fmtAmt(inv.amount)}`);
-  sendNotification(`New Invoice — ${inv.id}`, `Invoice ${inv.id} for ${projName} · ${fmtAmt(inv.amount)} was created.`);
+    issue_date:   document.getElementById('ai-date').value.trim() || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    due_date:     document.getElementById('ai-due').value.trim()  || '',
+    status:       document.getElementById('ai-status').value
+  });
+  if (error) { showToast('Error creating invoice: ' + error.message); return; }
+  await addActivity(partnerId, `Invoice <strong>${invId}</strong> issued — ${fmtAmt(parseFloat(amount))}`);
+  sendNotification(`New Invoice — ${invId}`, `Invoice ${invId} for ${projName} · ${fmtAmt(parseFloat(amount))} was created.`);
   closeAdminModal('invoice');
   ['ai-amount','ai-date','ai-due'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   showToast('Invoice created!');
-  renderInvoices();
-  renderOverview();
-  renderPartners();
+  await renderInvoices();
+  await renderOverview();
+  await renderPartners();
 }
 
-function savePartner() {
+async function savePartner() {
   const company  = document.getElementById('addp-company').value.trim();
   const name     = document.getElementById('addp-name').value.trim();
   const email    = document.getElementById('addp-email').value.trim().toLowerCase();
   const password = document.getElementById('addp-password').value.trim();
   if (!company || !email || !password) { showToast('Please fill in all required fields.'); return; }
   const initials = name.split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2) || company.slice(0,2).toUpperCase();
-  const existing = getAllPartners();
-  if (existing.find(p => p.email === email)) { showToast('A partner with that email already exists.'); return; }
-  const newPartner = { email, name, company, initials, role:'partner', password, createdAt: new Date().toISOString() };
-  const dynamic = dbGet('ev_db_partners');
-  dynamic.push(newPartner);
-  dbSet('ev_db_partners', dynamic);
+  showToast('Creating partner account…');
+  // Create Supabase Auth user — trigger auto-creates their profile row
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: { data: { name: name || company, company, initials, role: 'partner' } }
+  });
+  if (error) { showToast('Error: ' + error.message); return; }
+  // Upsert profile in case trigger hasn't fired yet
+  if (data.user) {
+    await sb.from('profiles').upsert({
+      id: data.user.id, email,
+      name: name || company, company, initials, role: 'partner'
+    });
+  }
   closeAdminModal('partner');
   ['addp-company','addp-name','addp-email','addp-password'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   showToast(`Partner "${company}" created!`);
-  renderPartners();
+  await renderPartners();
 }
 
 // ═══════════ UPLOAD ═══════════
-function populateUploadSelector() {
+async function populateUploadSelector() {
   const sel = document.getElementById('upload-project');
-  const projs = getProjects(_session.email, _isAdmin);
+  const projs = await getProjects(_session.id, _isAdmin);
   sel.innerHTML = '<option value="">— Choose a project —</option>' + projs.map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
-  renderRecentUploads();
+  await renderRecentUploads();
 }
 
-function renderRecentUploads() {
-  const projs = getProjects(_session.email, _isAdmin);
+async function renderRecentUploads() {
+  const projs = await getProjects(_session.id, _isAdmin);
   const allUploads = projs.flatMap(p => (p.uploads||[]).map(u=>({...u, projectName:p.name})));
   const el = document.getElementById('recent-uploads-list');
   if (!allUploads.length) { el.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--ash);font-size:.88rem">No uploads yet. Add files to a project above.</div>`; return; }
@@ -1747,7 +1774,7 @@ function handleFileSelect(e) {
   if (files.length) el.textContent = files.map(f=>f.name).join(', ') + ` (${files.length} file${files.length>1?'s':''} selected)`;
 }
 
-function submitUpload() {
+async function submitUpload() {
   const projSel  = document.getElementById('upload-project');
   const projId   = projSel.value;
   const projName = projSel.options[projSel.selectedIndex]?.text || '';
@@ -1756,25 +1783,23 @@ function submitUpload() {
   const filesText= document.getElementById('selected-files').textContent;
   if (!projId) { showToast('Please select a project first.'); return; }
 
-  // Save upload records to project
   const fileNames = filesText ? filesText.split(',').map(n=>n.trim().replace(/\s*\(\d+ files? selected\)/,'')) : ['File'];
-  const projects  = dbGet('ev_db_projects');
-  const pidx      = projects.findIndex(p => p.id === projId);
-  if (pidx >= 0) {
-    if (!projects[pidx].uploads) projects[pidx].uploads = [];
-    fileNames.forEach(n => {
-      if (n) projects[pidx].uploads.unshift({ name:n, type: fileType.toLowerCase().includes('photo')?'photo':'doc', date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}), size:'—' });
-    });
-    dbSet('ev_db_projects', projects);
-    addActivity(projects[pidx].partnerEmail, `Files uploaded to <strong>${projName}</strong>`);
-  }
+  // Fetch current uploads from Supabase and append new ones
+  const { data: proj } = await sb.from('projects').select('uploads, partner_id').eq('id', projId).single();
+  const uploads = proj?.uploads || [];
+  const dateStr = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  fileNames.forEach(n => {
+    if (n) uploads.unshift({ name:n, type: fileType.toLowerCase().includes('photo')?'photo':'doc', date: dateStr, size:'—' });
+  });
+  await sb.from('projects').update({ uploads }).eq('id', projId);
+  if (proj?.partner_id) await addActivity(proj.partner_id, `Files uploaded to <strong>${projName}</strong>`);
 
   sendNotification(`New Upload — ${projName}`, `File type: ${fileType}\nProject: ${projName}\nFiles: ${filesText||'upload'}\nNotes: ${notes||'(none)'}`);
   showToast('Files uploaded successfully!');
   document.getElementById('upload-notes').value = '';
   document.getElementById('selected-files').textContent = '';
   document.getElementById('file-input').value = '';
-  renderRecentUploads();
+  await renderRecentUploads();
 }
 
 // Drag & drop
@@ -1840,57 +1865,67 @@ function sendNotification(subject, message) {
   }).catch(() => {}); // fail silently — never block the UI
 }
 
-// ═══════════ SESSION ═══════════
-const _session = JSON.parse(sessionStorage.getItem('ev_user') || '{}');
-const _isAdmin = _session.role === 'admin';
+// ═══════════ SESSION + INIT ═══════════
+let _session = {};
+let _isAdmin  = false;
 
-if (!_session.email) { window.location.href = 'partner-login.html'; }
+async function init() {
+  // Verify Supabase session
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'partner-login.html'; return; }
 
-// Personalise UI
-if (_session.name)    { document.querySelectorAll('.partner-name').forEach(el => el.textContent = _session.name); }
-if (_session.company) { document.querySelectorAll('.partner-co').forEach(el => el.textContent = _session.company); }
-if (_session.initials){ document.querySelectorAll('.partner-avatar, .topbar-user-avatar').forEach(el => el.textContent = _session.initials); }
-if (_session.name)    { document.querySelectorAll('.topbar-user-name').forEach(el => el.textContent = _session.name.split(' ')[0] + ' ' + (_session.name.split(' ')[1]?.[0]||'') + '.'); }
-const greetEl = document.getElementById('overview-greeting');
-if (greetEl && _session.name) greetEl.textContent = `Welcome back, ${_session.name.split(' ')[0]}. Here's what's happening with your projects today.`;
+  // Load profile (cached in sessionStorage for speed)
+  const cached = JSON.parse(sessionStorage.getItem('ev_user') || '{}');
+  if (cached.id && cached.role) {
+    _session = cached;
+  } else {
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    _session = { id: session.user.id, email: profile?.email || session.user.email, name: profile?.name || '', company: profile?.company || '', initials: profile?.initials || '??', role: profile?.role || 'partner' };
+    sessionStorage.setItem('ev_user', JSON.stringify(_session));
+  }
+  _isAdmin = _session.role === 'admin';
 
-// Admin-only UI elements
-if (_isAdmin) {
-  document.getElementById('btn-add-project').style.display = '';
-  document.getElementById('btn-add-invoice').style.display = '';
-  // Inject Partners nav link
-  document.getElementById('admin-nav-items').innerHTML = `
-    <div class="sidebar-section-title">Admin</div>
-    <div class="sidebar-link" data-view="partners" onclick="showView('partners','Partners',this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-      Partners
-    </div>`;
-} else {
-  // Partner user — remove the Partners view from the DOM entirely so
-  // the HTML is never accessible, even via browser dev tools inspection
-  const pvEl = document.getElementById('view-partners');
-  if (pvEl) pvEl.remove();
-  // Also remove the admin modals from the DOM
+  // Personalise UI
+  document.querySelectorAll('.partner-name').forEach(el => el.textContent = _session.name);
+  document.querySelectorAll('.partner-co').forEach(el => el.textContent = _session.company);
+  document.querySelectorAll('.partner-avatar, .topbar-user-avatar').forEach(el => el.textContent = _session.initials);
+  document.querySelectorAll('.topbar-user-name').forEach(el => el.textContent = _session.name.split(' ')[0] + ' ' + (_session.name.split(' ')[1]?.[0]||'') + '.');
+  const greetEl = document.getElementById('overview-greeting');
+  if (greetEl) greetEl.textContent = `Welcome back, ${_session.name.split(' ')[0]}. Here's what's happening with your projects today.`;
+
+  // Admin-only UI
+  if (_isAdmin) {
+    document.getElementById('btn-add-project').style.display = '';
+    document.getElementById('btn-add-invoice').style.display = '';
+    document.getElementById('admin-nav-items').innerHTML = `
+      <div class="sidebar-section-title">Admin</div>
+      <div class="sidebar-link" data-view="partners" onclick="showView('partners','Partners',this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Partners
+      </div>`;
+  } else {
+    const pvEl = document.getElementById('view-partners');
+    if (pvEl) pvEl.remove();
+    ['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
+      const m = document.getElementById(id); if (m) m.remove();
+    });
+  }
+
+  // Close admin modals on overlay click
   ['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
-    const m = document.getElementById(id);
-    if (m) m.remove();
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
   });
+
+  sendNotification(`Portal Login — ${_session.company}`, `${_session.name} (${_session.email}) signed in to the Everlast Partner Portal.`);
+
+  await renderOverview();
+  await renderProjects();
+  await renderInvoices();
+  await populateUploadSelector();
 }
 
-// Close admin modals on overlay click
-['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
-});
-
-// Send login notification
-sendNotification(`Portal Login — ${_session.company}`, `${_session.name} (${_session.email}) signed in to the Everlast Partner Portal.`);
-
-// ═══════════ INIT ═══════════
-renderOverview();
-renderProjects();
-renderInvoices();
-populateUploadSelector();
+init();
 </script>
 </body>
 </html>
