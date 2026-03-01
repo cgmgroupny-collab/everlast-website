@@ -711,6 +711,39 @@
     .aform-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
     .aform-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;}
 
+    /* ── Photo upload field ── */
+    .photo-upload-label{display:flex;align-items:center;gap:.6rem;background:rgba(255,129,14,.06);border:1.5px dashed rgba(255,129,14,.35);border-radius:6px;padding:.75rem 1rem;cursor:pointer;transition:border-color .2s,background .2s;}
+    .photo-upload-label:hover{border-color:var(--orange);background:rgba(255,129,14,.1);}
+    .photo-upload-label svg{width:18px;height:18px;color:var(--orange);flex-shrink:0;}
+    .photo-upload-label span{font-size:.82rem;color:var(--ash);}
+    .photo-preview-strip{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.5rem;}
+    .photo-thumb{width:52px;height:52px;border-radius:4px;object-fit:cover;border:1.5px solid var(--border);}
+
+    /* ── Phase timeline ── */
+    .phases-section{margin-top:1.6rem;}
+    .phases-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem;}
+    .phases-title{font-family:'Barlow Condensed',sans-serif;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);font-weight:700;}
+    .add-phase-btn{display:flex;align-items:center;gap:.35rem;background:var(--orange);color:#fff;border:none;border-radius:5px;padding:.35rem .75rem;font-family:'Barlow Condensed',sans-serif;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;cursor:pointer;transition:background .2s;}
+    .add-phase-btn:hover{background:var(--orange-lt);}
+    .phase-item{border-left:2px solid var(--orange);padding-left:1rem;margin-bottom:1.2rem;position:relative;}
+    .phase-item::before{content:'';width:8px;height:8px;background:var(--orange);border-radius:50%;position:absolute;left:-5px;top:4px;}
+    .phase-name{font-family:'Barlow Condensed',sans-serif;font-size:.88rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#222;}
+    .phase-date{font-size:.75rem;color:var(--ash);margin-bottom:.3rem;}
+    .phase-notes{font-size:.82rem;color:#444;line-height:1.55;margin-bottom:.6rem;}
+    .phase-photos{display:flex;flex-wrap:wrap;gap:.5rem;}
+    .phase-photo{width:72px;height:72px;border-radius:6px;object-fit:cover;border:1.5px solid var(--border);cursor:pointer;transition:transform .15s;}
+    .phase-photo:hover{transform:scale(1.05);}
+    .no-phases{font-size:.85rem;color:var(--ash);font-style:italic;padding:.5rem 0;}
+
+    /* ── Credential modal ── */
+    .cred-row{display:flex;align-items:center;justify-content:space-between;background:#f8f8f8;border:1px solid var(--border);border-radius:6px;padding:.7rem 1rem;margin-bottom:.8rem;}
+    .cred-label{font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);font-weight:700;margin-bottom:.2rem;}
+    .cred-val{font-size:.92rem;font-weight:600;color:#222;word-break:break-all;}
+    .cred-copy{background:transparent;border:1px solid var(--border);border-radius:4px;padding:.3rem .6rem;font-size:.72rem;cursor:pointer;color:var(--ash);transition:all .2s;flex-shrink:0;margin-left:.6rem;}
+    .cred-copy:hover{border-color:var(--orange);color:var(--orange);}
+    .cred-reset-btn{width:100%;background:transparent;border:1.5px solid var(--orange);color:var(--orange);border-radius:6px;padding:.75rem;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.08em;cursor:pointer;transition:all .2s;margin-top:.4rem;}
+    .cred-reset-btn:hover{background:var(--orange);color:#fff;}
+
     /* ── Responsive ── */
     @media (max-width: 1200px) {
       .project-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1060,6 +1093,15 @@
         <div class="aform-group"><label>Est. Completion</label><input type="text" id="ap-end" placeholder="e.g. Mar 28, 2026" /></div>
       </div>
       <div class="aform-group"><label>Description</label><textarea id="ap-desc" placeholder="Brief description of the project scope…"></textarea></div>
+      <div class="aform-group">
+        <label>Cover Photo <span style="font-weight:400;color:var(--ash)">(optional)</span></label>
+        <label class="photo-upload-label" for="ap-cover-photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+          <span id="ap-cover-label">Click to select a photo…</span>
+        </label>
+        <input type="file" id="ap-cover-photo" accept="image/*" style="display:none" onchange="previewCoverPhoto(this)" />
+        <div class="photo-preview-strip" id="ap-cover-preview"></div>
+      </div>
     </div>
     <div class="modal-footer">
       <button class="modal-btn modal-btn-outline" onclick="closeAdminModal('project')">Cancel</button>
@@ -1162,12 +1204,92 @@
         </div>
         <div class="modal-progress-bar"><div class="modal-progress-fill" id="modal-fill" style="width:0%"></div></div>
       </div>
-      <div class="modal-section-title">Project Files</div>
+      <!-- Phase Updates -->
+      <div class="phases-section">
+        <div class="phases-header">
+          <span class="phases-title">Phase Updates</span>
+          <button class="add-phase-btn" id="btn-add-phase" style="display:none" onclick="openPhaseModal()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Phase Update
+          </button>
+        </div>
+        <div id="modal-phases"><!-- phases rendered here --></div>
+      </div>
+
+      <div class="modal-section-title" style="margin-top:1.2rem">Project Files</div>
       <div id="modal-files"><!-- Files list --></div>
     </div>
     <div class="modal-footer">
       <button class="modal-btn modal-btn-outline" onclick="closeModal()">Close</button>
       <button class="modal-btn modal-btn-primary" onclick="goToUpload()">Upload Files</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Add Phase Update Modal (admin) ══ -->
+<div class="modal-overlay" id="modal-add-phase">
+  <div class="modal-card" style="max-width:520px">
+    <div class="modal-header">
+      <div><div class="modal-title">Add Phase Update</div><p style="font-size:.82rem;color:var(--ash);margin-top:.25rem">Upload photos and notes for this project phase</p></div>
+      <button class="modal-close" onclick="closePhaseModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="aform-row">
+        <div class="aform-group"><label>Phase Name *</label>
+          <select id="phase-name">
+            <option value="Planning">Planning</option>
+            <option value="Demo / Prep">Demo / Prep</option>
+            <option value="Foundation">Foundation</option>
+            <option value="Framing">Framing</option>
+            <option value="Roofing">Roofing</option>
+            <option value="Exterior">Exterior Work</option>
+            <option value="Interior">Interior Work</option>
+            <option value="Finishing">Finishing</option>
+            <option value="Final Inspection">Final Inspection</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+        <div class="aform-group"><label>Date</label><input type="text" id="phase-date" placeholder="e.g. Mar 5, 2026" /></div>
+      </div>
+      <div class="aform-group"><label>Notes</label><textarea id="phase-notes" placeholder="Describe what was completed in this phase…"></textarea></div>
+      <div class="aform-group">
+        <label>Photos <span style="font-weight:400;color:var(--ash)">(select multiple)</span></label>
+        <label class="photo-upload-label" for="phase-photos">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+          <span id="phase-photo-label">Click to select photos…</span>
+        </label>
+        <input type="file" id="phase-photos" accept="image/*" multiple style="display:none" onchange="previewPhasePhotos(this)" />
+        <div class="photo-preview-strip" id="phase-photo-preview"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-outline" onclick="closePhaseModal()">Cancel</button>
+      <button class="modal-btn modal-btn-primary" id="save-phase-btn" onclick="savePhaseUpdate()">Save Phase Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Partner Credentials Modal (admin) ══ -->
+<div class="modal-overlay" id="modal-credentials">
+  <div class="modal-card" style="max-width:420px">
+    <div class="modal-header">
+      <div><div class="modal-title" id="cred-company">Partner Access</div><p style="font-size:.82rem;color:var(--ash);margin-top:.25rem">Login credentials &amp; access management</p></div>
+      <button class="modal-close" onclick="closeCredModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="cred-row">
+        <div style="flex:1"><div class="cred-label">Login Email</div><div class="cred-val" id="cred-email">—</div></div>
+        <button class="cred-copy" onclick="copyCredEmail()">Copy</button>
+      </div>
+      <div class="cred-row">
+        <div style="flex:1"><div class="cred-label">Password</div><div class="cred-val" style="color:var(--ash);font-size:.82rem;">Stored securely — cannot be displayed</div></div>
+      </div>
+      <button class="cred-reset-btn" onclick="sendPasswordReset()">
+        📧 Send Password Reset Email to Partner
+      </button>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn modal-btn-outline" onclick="closeCredModal()">Close</button>
     </div>
   </div>
 </div>
@@ -1438,6 +1560,37 @@ function openModal(idx) {
   document.getElementById('modal-badges').innerHTML =
     `<span class="status-badge" style="background:${tc.bg};color:${tc.color}">${p.type}</span>
      <span class="status-badge ${getStatusClass(p.status)}">${p.status}</span>`;
+  // Show/hide admin Add Phase button
+  const addPhaseBtn = document.getElementById('btn-add-phase');
+  if (addPhaseBtn) addPhaseBtn.style.display = _isAdmin ? '' : 'none';
+
+  // Render phases
+  const phasesEl = document.getElementById('modal-phases');
+  const phases   = p.phases || [];
+  if (!phases.length) {
+    phasesEl.innerHTML = `<div class="no-phases">No phase updates yet.${_isAdmin ? ' Click "Add Phase Update" to log progress.' : ''}</div>`;
+  } else {
+    phasesEl.innerHTML = phases.slice().reverse().map(ph => `
+      <div class="phase-item">
+        <div class="phase-name">${ph.name}</div>
+        <div class="phase-date">${ph.date}</div>
+        ${ph.notes ? `<div class="phase-notes">${ph.notes}</div>` : ''}
+        ${ph.photos && ph.photos.length ? `<div class="phase-photos">${ph.photos.map(url => `<img class="phase-photo" src="${url}" onclick="window.open('${url}','_blank')" />`).join('')}</div>` : ''}
+      </div>`).join('');
+  }
+
+  // Cover photo in header if available
+  const modalHeader = document.querySelector('#project-modal .modal-header');
+  const existingCover = document.getElementById('modal-cover');
+  if (existingCover) existingCover.remove();
+  if (p.cover_photo) {
+    const cover = document.createElement('div');
+    cover.id = 'modal-cover';
+    cover.style.cssText = 'width:100%;height:160px;border-radius:8px;overflow:hidden;margin-bottom:1rem;';
+    cover.innerHTML = `<img src="${p.cover_photo}" style="width:100%;height:100%;object-fit:cover;" />`;
+    document.querySelector('#project-modal .modal-body').prepend(cover);
+  }
+
   document.getElementById('modal-files').innerHTML = p.uploads.map(f => `
     <div class="upload-file-item" style="padding:.7rem 0;border-bottom:1px solid rgba(0,0,0,.05);">
       <div class="file-icon ${f.type}">
@@ -1600,6 +1753,7 @@ async function renderPartners() {
       <div class="partner-card-footer">
         <button class="pc-btn primary" onclick="openAddProjectForPartner('${p.id}')">+ Add Project</button>
         <button class="pc-btn" onclick="openAddInvoiceForPartner('${p.id}')">+ Invoice</button>
+        <button class="pc-btn" onclick="showCredentials('${p.email}','${p.company}')">🔑 Access</button>
       </div>
     </div>`;
   }).join('');
@@ -1646,6 +1800,15 @@ async function saveProject() {
   const partnerId = document.getElementById('ap-partner').value;
   if (!name || !partnerId) { showToast('Please fill in project name and partner.'); return; }
   const id = 'P-' + Date.now();
+
+  // Upload cover photo if selected
+  let coverPhotoUrl = null;
+  const coverFile = document.getElementById('ap-cover-photo')?.files?.[0];
+  if (coverFile) {
+    showToast('Uploading cover photo…');
+    coverPhotoUrl = await uploadToStorage(coverFile, id);
+  }
+
   const { error } = await sb.from('projects').insert({
     id,
     name,
@@ -1658,8 +1821,10 @@ async function saveProject() {
     amount:      document.getElementById('ap-amount').value.trim() || '$0',
     start_date:  document.getElementById('ap-start').value.trim(),
     end_date:    document.getElementById('ap-end').value.trim(),
-    description: document.getElementById('ap-desc').value.trim(),
-    uploads:     []
+    description:  document.getElementById('ap-desc').value.trim(),
+    cover_photo:  coverPhotoUrl,
+    uploads:      [],
+    phases:       []
   });
   if (error) { showToast('Error saving project: ' + error.message); return; }
   await addActivity(partnerId, `New project assigned: <strong>${name}</strong>`);
@@ -1667,6 +1832,9 @@ async function saveProject() {
   closeAdminModal('project');
   ['ap-name','ap-loc','ap-pm','ap-amount','ap-start','ap-end','ap-desc'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   document.getElementById('ap-progress').value = '0';
+  const cpEl = document.getElementById('ap-cover-photo'); if(cpEl) cpEl.value='';
+  const cpPrev = document.getElementById('ap-cover-preview'); if(cpPrev) cpPrev.innerHTML='';
+  const cpLbl = document.getElementById('ap-cover-label'); if(cpLbl) cpLbl.textContent='Click to select a photo…';
   showToast('Project saved successfully!');
   await renderProjects();
   await renderOverview();
@@ -1735,6 +1903,138 @@ async function savePartner() {
   ['addp-company','addp-name','addp-email','addp-password'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   showToast(`Partner "${company}" created!`);
   await renderPartners();
+}
+
+// ═══════════ SUPABASE STORAGE ═══════════
+async function uploadToStorage(file, projectId) {
+  const ext  = file.name.split('.').pop() || 'jpg';
+  const path = `${projectId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await sb.storage.from('project-photos').upload(path, file, { cacheControl:'3600', upsert:false });
+  if (error) { console.error('Storage upload error:', error); return null; }
+  const { data: { publicUrl } } = sb.storage.from('project-photos').getPublicUrl(path);
+  return publicUrl;
+}
+
+// ═══════════ COVER PHOTO PREVIEW ═══════════
+function previewCoverPhoto(input) {
+  const preview = document.getElementById('ap-cover-preview');
+  const label   = document.getElementById('ap-cover-label');
+  preview.innerHTML = '';
+  if (input.files && input.files[0]) {
+    label.textContent = input.files[0].name;
+    const img = document.createElement('img');
+    img.className = 'photo-thumb';
+    img.src = URL.createObjectURL(input.files[0]);
+    preview.appendChild(img);
+  }
+}
+
+// ═══════════ PHASE MODAL ═══════════
+let _phaseProjectId = null;
+
+function openPhaseModal() {
+  _phaseProjectId = _projectsList[currentProjectIdx]?.id || null;
+  if (!_phaseProjectId) return;
+  document.getElementById('phase-date').value = new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  document.getElementById('phase-notes').value = '';
+  document.getElementById('phase-photo-preview').innerHTML = '';
+  document.getElementById('phase-photo-label').textContent = 'Click to select photos…';
+  document.getElementById('phase-photos').value = '';
+  document.getElementById('modal-add-phase').classList.add('open');
+}
+
+function closePhaseModal() {
+  document.getElementById('modal-add-phase').classList.remove('open');
+}
+
+function previewPhasePhotos(input) {
+  const preview = document.getElementById('phase-photo-preview');
+  const label   = document.getElementById('phase-photo-label');
+  preview.innerHTML = '';
+  if (input.files && input.files.length) {
+    label.textContent = `${input.files.length} photo${input.files.length > 1 ? 's' : ''} selected`;
+    Array.from(input.files).slice(0, 6).forEach(f => {
+      const img = document.createElement('img');
+      img.className = 'photo-thumb';
+      img.src = URL.createObjectURL(f);
+      preview.appendChild(img);
+    });
+  }
+}
+
+async function savePhaseUpdate() {
+  if (!_phaseProjectId) return;
+  const btn = document.getElementById('save-phase-btn');
+  btn.textContent = 'Uploading…';
+  btn.disabled = true;
+
+  const phaseName = document.getElementById('phase-name').value;
+  const phaseDate = document.getElementById('phase-date').value.trim() || new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const notes     = document.getElementById('phase-notes').value.trim();
+  const files     = Array.from(document.getElementById('phase-photos').files);
+
+  // Upload each photo to Supabase Storage
+  const photoUrls = [];
+  for (const file of files) {
+    const url = await uploadToStorage(file, _phaseProjectId);
+    if (url) photoUrls.push(url);
+  }
+
+  // Append phase to project's phases array
+  const { data: proj } = await sb.from('projects').select('phases, partner_id').eq('id', _phaseProjectId).single();
+  const phases = proj?.phases || [];
+  phases.push({
+    id:     'PH-' + Date.now(),
+    name:   phaseName,
+    date:   phaseDate,
+    notes,
+    photos: photoUrls
+  });
+  const { error } = await sb.from('projects').update({ phases }).eq('id', _phaseProjectId);
+  if (error) { showToast('Error saving phase: ' + error.message); btn.textContent = 'Save Phase Update'; btn.disabled = false; return; }
+
+  if (proj?.partner_id) await addActivity(proj.partner_id, `Phase update: <strong>${phaseName}</strong> on project`);
+
+  btn.textContent = 'Save Phase Update';
+  btn.disabled = false;
+  closePhaseModal();
+  showToast('Phase update saved!');
+
+  // Refresh the project list and reopen modal to show new phase
+  _projectsList = await getProjects(_session.id, _isAdmin);
+  const idx = _projectsList.findIndex(p => p.id === _phaseProjectId);
+  if (idx >= 0) openModal(idx);
+}
+
+// ═══════════ CREDENTIALS MODAL ═══════════
+let _credEmail = '';
+
+function showCredentials(email, company) {
+  _credEmail = email;
+  document.getElementById('cred-company').textContent = company + ' — Access';
+  document.getElementById('cred-email').textContent   = email;
+  document.getElementById('modal-credentials').classList.add('open');
+}
+
+function closeCredModal() {
+  document.getElementById('modal-credentials').classList.remove('open');
+}
+
+function copyCredEmail() {
+  navigator.clipboard.writeText(_credEmail).then(() => showToast('Email copied!')).catch(() => {
+    const el = document.getElementById('cred-email');
+    const range = document.createRange(); range.selectNode(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(range);
+  });
+}
+
+async function sendPasswordReset() {
+  if (!_credEmail) return;
+  const { error } = await sb.auth.resetPasswordForEmail(_credEmail, {
+    redirectTo: window.location.origin + '/partner-login.html'
+  });
+  if (error) { showToast('Error: ' + error.message); return; }
+  showToast(`Reset email sent to ${_credEmail}!`);
 }
 
 // ═══════════ UPLOAD ═══════════
@@ -1911,8 +2211,8 @@ async function init() {
     });
   }
 
-  // Close admin modals on overlay click
-  ['modal-add-project','modal-add-invoice','modal-add-partner'].forEach(id => {
+  // Close modals on overlay click
+  ['modal-add-project','modal-add-invoice','modal-add-partner','modal-add-phase','modal-credentials'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.addEventListener('click', function(e){ if(e.target===this) this.classList.remove('open'); });
   });
