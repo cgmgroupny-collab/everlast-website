@@ -369,48 +369,47 @@
 
     </div>
 
-    <!-- Test credentials card -->
-    <div style="margin-top:1.2rem;background:rgba(255,129,14,.08);border:1px solid rgba(255,129,14,.25);border-radius:10px;padding:1.1rem 1.4rem;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:.8rem;">Test Credentials</div>
-      <div style="display:grid;gap:.5rem;">
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:.78rem;color:rgba(255,255,255,.45);">Admin Login</span>
-          <button onclick="fillCredentials('admin@everlastgc.com','Everlast2026!')" style="font-size:.72rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;background:rgba(255,129,14,.15);border:1px solid rgba(255,129,14,.35);color:var(--orange);border-radius:4px;padding:.25rem .6rem;cursor:pointer;transition:background .2s;">Use Admin</button>
-        </div>
-        <div style="font-size:.8rem;color:rgba(255,255,255,.6);font-family:'Barlow',monospace;line-height:1.7;">
-          <span style="color:rgba(255,255,255,.35);">Email: </span>admin@everlastgc.com<br>
-          <span style="color:rgba(255,255,255,.35);">Password: </span>Everlast2026!
-        </div>
-        <div style="height:1px;background:rgba(255,255,255,.07);margin:.3rem 0;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-size:.78rem;color:rgba(255,255,255,.45);">Partner Login</span>
-          <button onclick="fillCredentials('partner@everlastgc.com','Partner2026!')" style="font-size:.72rem;font-family:'Barlow Condensed',sans-serif;letter-spacing:.1em;background:rgba(255,129,14,.15);border:1px solid rgba(255,129,14,.35);color:var(--orange);border-radius:4px;padding:.25rem .6rem;cursor:pointer;transition:background .2s;">Use Partner</button>
-        </div>
-        <div style="font-size:.8rem;color:rgba(255,255,255,.6);font-family:'Barlow',monospace;line-height:1.7;">
-          <span style="color:rgba(255,255,255,.35);">Email: </span>partner@everlastgc.com<br>
-          <span style="color:rgba(255,255,255,.35);">Password: </span>Partner2026!
-        </div>
-      </div>
-    </div>
-
   </div>
 
   <!-- Copyright -->
   <p class="login-copyright">© 2026 Everlast General Contracting · Las Vegas, NV · All rights reserved.</p>
 
   <script>
-    // ── Demo credentials ──
+    // ── Partner accounts ─────────────────────────────────────────
+    // To add more partners: copy a line below and update email/password/name/company/role
     const USERS = [
-      { email: 'admin@everlastgc.com',   password: 'Everlast2026!', name: 'Admin' },
-      { email: 'partner@everlastgc.com', password: 'Partner2026!',  name: 'Partner' }
+      {
+        email:    'admin@everlastgc.com',
+        password: 'Everlast2026!',
+        name:     'Everlast Admin',
+        company:  'Everlast General Contracting',
+        initials: 'EA',
+        role:     'admin'       // admin sees extra controls
+      },
+      {
+        email:    'admin@valleyconstruction.com',
+        password: 'Valley2026!',
+        name:     'Valley Admin',
+        company:  'Valley Construction',
+        initials: 'VC',
+        role:     'partner'
+      },
+      {
+        email:    'admin@quantumgc.com',
+        password: 'Quantum2026!',
+        name:     'Quantum Admin',
+        company:  'Quantum General Contracting',
+        initials: 'QG',
+        role:     'partner'
+      }
     ];
 
     function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('email').value.trim().toLowerCase();
+      const email    = document.getElementById('email').value.trim().toLowerCase();
       const password = document.getElementById('password').value;
-      const btn = document.getElementById('sign-in-btn');
-      const errEl = document.getElementById('login-error');
+      const btn      = document.getElementById('sign-in-btn');
+      const errEl    = document.getElementById('login-error');
 
       const match = USERS.find(u => u.email === email && u.password === password);
 
@@ -421,26 +420,21 @@
         return;
       }
 
+      // Save session so dashboard personalises correctly
+      sessionStorage.setItem('ev_user', JSON.stringify(match));
+
       errEl.style.display = 'none';
       btn.innerHTML = 'Signing in&hellip;';
       btn.style.opacity = '.7';
       btn.style.cursor = 'not-allowed';
       btn.disabled = true;
-      setTimeout(() => {
-        window.location.href = 'partner-dashboard.html';
-      }, 1000);
-    }
-
-    function fillCredentials(email, password) {
-      document.getElementById('email').value = email;
-      document.getElementById('password').value = password;
-      document.getElementById('login-error').style.display = 'none';
+      setTimeout(() => { window.location.href = 'partner-dashboard.html'; }, 1000);
     }
 
     // Forgot password
     document.querySelector('.forgot-link').addEventListener('click', function(e) {
       e.preventDefault();
-      alert('Please contact your Everlast project manager to reset your password.');
+      alert('Please contact Everlast at everlastgcus@gmail.com to reset your password.');
     });
   </script>
 
