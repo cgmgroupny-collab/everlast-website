@@ -54,10 +54,22 @@
       object-fit:cover; object-position:center center; display:block;
     }
     .nav-links { display:flex; gap:2.8rem; list-style:none; align-items:center; }
-    .nav-links a { color:rgba(255,255,255,.9); font-size:0.88rem; letter-spacing:0.06em; text-transform:none; font-weight:500; transition:color .25s; font-family:'Barlow',sans-serif; }
-    .nav-links a:hover { color:#fff; }
+    .nav-links a { color:#fff; font-size:1rem; letter-spacing:0.06em; text-transform:none; font-weight:700; transition:color .25s; font-family:'Barlow',sans-serif; }
+    .nav-links a:hover { color:var(--orange); }
     nav.nav-scrolled .nav-links a { color:var(--black); }
     nav.nav-scrolled .nav-links a:hover { color:var(--orange); }
+    .nav-signin {
+      color:#fff !important;
+      border:1.5px solid rgba(255,255,255,.55) !important;
+      background:transparent !important;
+      padding:0.6rem 1.4rem !important; font-weight:700 !important;
+      letter-spacing:0.1em !important; border-radius:4px;
+      transition:var(--transition) !important;
+      font-size:1rem !important;
+    }
+    .nav-signin:hover { background:rgba(255,255,255,.12) !important; border-color:#fff !important; }
+    nav.nav-scrolled .nav-signin { border-color:var(--black) !important; color:var(--black) !important; }
+    nav.nav-scrolled .nav-signin:hover { border-color:var(--orange) !important; color:var(--orange) !important; }
     .nav-cta {
       color:#fff !important;
       border:1.5px solid rgba(255,255,255,.55) !important;
@@ -905,6 +917,7 @@
       <li><a href="#why">Why Us</a></li>
       <li><a href="#work">Our Work</a></li>
       <li><a href="projects.html">Projects</a></li>
+      <li><a href="partner-login.html" class="nav-signin">Sign In</a></li>
       <li><a href="#contact" class="nav-cta">Free Estimate</a></li>
     </ul>
   </nav>
@@ -1569,6 +1582,7 @@
           <li><a href="projects.html">Projects</a></li>
           <li><a href="#process">How It Works</a></li>
           <li><a href="#contact">Get a Quote</a></li>
+          <li><a href="partner-login.html">Partner Portal</a></li>
         </ul>
       </div>
 
