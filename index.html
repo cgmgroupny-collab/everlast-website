@@ -949,6 +949,37 @@
       animation:heroScan 8s linear infinite;
     }
     @keyframes heroScan { to { left:115%; } }
+
+    /* ── Lead toast notification ── */
+    .ev-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e1e1e;
+      border: 1px solid rgba(255,129,14,.5);
+      color: #fff;
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      font-family: 'Barlow', sans-serif;
+      font-size: .92rem;
+      font-weight: 500;
+      z-index: 99999;
+      opacity: 0;
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5);
+      transition: opacity .35s, transform .35s;
+      pointer-events: none;
+    }
+    .ev-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    .hero-pill-btn.sent {
+      background: #3CCECB !important;
+      cursor: default;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -1804,16 +1835,99 @@
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-target]').forEach(el => statIO.observe(el));
 
+    /* ── Lead CSV helpers ───────────────────────────── */
+    function saveLeadCSV(lead) {
+      const leads = JSON.parse(localStorage.getItem('ev_leads') || '[]');
+      leads.push(lead);
+      localStorage.setItem('ev_leads', JSON.stringify(leads));
+    }
+
+    function showLeadToast(msg) {
+      const t = document.createElement('div');
+      t.className = 'ev-toast';
+      t.innerHTML = '<span style="color:var(--orange);margin-right:.5rem">✓</span>' + msg;
+      document.body.appendChild(t);
+      requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
+      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
+    }
+
+    function downloadLeadsCSV() {
+      const leads = JSON.parse(localStorage.getItem('ev_leads') || '[]');
+      if (!leads.length) { alert('No leads recorded yet.'); return; }
+      const headers = [...new Set(leads.flatMap(l => Object.keys(l)))];
+      const rows = leads.map(l => headers.map(h => JSON.stringify(l[h] !== undefined ? l[h] : '')).join(','));
+      const csv = [headers.join(','), ...rows].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'everlast-leads-' + new Date().toISOString().slice(0,10) + '.csv';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    // Keyboard shortcut: Ctrl+Shift+L  →  download leads CSV
+    document.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
+        e.preventDefault();
+        downloadLeadsCSV();
+      }
+    });
+
     /* ── Hero quick form ────────────────────────────── */
-    function handleHeroForm() {
-      const phone = document.getElementById('hf-phone').value.trim();
+    async function handleHeroForm() {
+      const phoneInput = document.getElementById('hf-phone');
+      const btn        = document.querySelector('.hero-pill-btn');
+      const phone      = phoneInput.value.trim();
+
       if (!phone) {
-        document.getElementById('hf-phone').focus();
+        phoneInput.focus();
+        phoneInput.style.outline = '2px solid var(--orange)';
+        setTimeout(() => { phoneInput.style.outline = ''; }, 1800);
         return;
       }
-      // Pre-fill step 3 and scroll to main form
-      document.getElementById('f-phone').value = phone;
-      document.getElementById('contact').scrollIntoView({ behavior:'smooth' });
+
+      // Prevent double-submit
+      if (btn.classList.contains('sent') || btn.disabled) return;
+
+      const origHTML = btn.innerHTML;
+      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Sending…';
+      btn.disabled = true;
+
+      // 1) Save to localStorage CSV
+      saveLeadCSV({
+        type:      'Quick Hero Form',
+        phone:     phone,
+        timestamp: new Date().toISOString(),
+        source:    'Hero Pill Form'
+      });
+
+      // 2) Send email via FormSubmit.co (AJAX — no page redirect)
+      try {
+        await fetch('https://formsubmit.co/ajax/everlastgcus@gmail.com', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject:  '🔔 New Lead — Quick Estimate Request',
+            _captcha:  'false',
+            _template: 'table',
+            Phone:     phone,
+            Source:    'Everlast Website — Hero Quick Form',
+            Timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }) + ' (Pacific)'
+          })
+        });
+      } catch(err) { /* fail silently — lead is already saved locally */ }
+
+      // 3) Success state
+      btn.classList.add('sent');
+      btn.innerHTML = '✓ Request Sent!';
+      phoneInput.value = '';
+      showLeadToast('Got it! We\'ll call you shortly.');
+
+      setTimeout(() => {
+        btn.innerHTML = origHTML;
+        btn.classList.remove('sent');
+        btn.disabled = false;
+      }, 4000);
     }
 
     /* ── Multi-step form ────────────────────────────── */
@@ -1871,16 +1985,58 @@
       document.getElementById('step-hint').textContent = stepHints[step] || '';
     }
 
-    function submitMultiForm() {
+    async function submitMultiForm() {
       const fname = document.getElementById('f-fname').value.trim();
+      const lname = document.getElementById('f-lname').value.trim();
       const phone = document.getElementById('f-phone').value.trim();
       const email = document.getElementById('f-email').value.trim();
+      const desc  = document.getElementById('f-desc') ? document.getElementById('f-desc').value.trim() : '';
+
       if (!fname || (!phone && !email)) {
         if (!fname) document.getElementById('f-fname').focus();
         else document.getElementById('f-phone').focus();
         return;
       }
-      // Hide all steps, show success
+
+      // Disable submit button to prevent double-submit
+      const submitBtn = document.querySelector('[onclick="submitMultiForm()"]');
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
+
+      // 1) Save full lead to localStorage CSV
+      saveLeadCSV({
+        type:        'Full Estimate Form',
+        name:        (fname + ' ' + lname).trim(),
+        phone:       phone,
+        email:       email,
+        services:    selectedServices.join('; ') || '',
+        description: desc,
+        timeline:    selectedTimeline || '',
+        timestamp:   new Date().toISOString(),
+        source:      'Contact Form — 3-Step'
+      });
+
+      // 2) Send email notification via FormSubmit.co (AJAX)
+      try {
+        await fetch('https://formsubmit.co/ajax/everlastgcus@gmail.com', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            _subject:    '🔔 New Estimate Request — ' + fname + ' ' + lname,
+            _captcha:    'false',
+            _template:   'table',
+            Name:        (fname + ' ' + lname).trim(),
+            Phone:       phone || '—',
+            Email:       email || '—',
+            Services:    selectedServices.join(', ') || 'Not selected',
+            Description: desc || 'Not provided',
+            Timeline:    selectedTimeline || 'Not selected',
+            Source:      'Everlast Website — Full Contact Form',
+            Timestamp:   new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }) + ' (Pacific)'
+          })
+        });
+      } catch(err) { /* fail silently — lead saved locally */ }
+
+      // 3) Show success state
       document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
       const success = document.getElementById('form-success');
       success.style.display = 'block';
@@ -1888,6 +2044,7 @@
       document.getElementById('form-progress').style.width = '100%';
       document.getElementById('step-label').textContent = 'Complete!';
       document.getElementById('step-hint').textContent = 'Request received';
+      showLeadToast('Request submitted! We\'ll be in touch within 2 hours.');
     }
 
     /* ── Cursor trail ──────────────────────────────── */
