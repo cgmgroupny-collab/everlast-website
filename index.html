@@ -945,9 +945,9 @@
         <!-- Single-row pill form -->
         <div class="hero-pill-form" role="form" aria-label="Quick estimate request">
           <div class="hero-pill-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </div>
-          <input type="tel" id="hf-phone" placeholder="Enter your phone number..." autocomplete="tel" />
+          <input type="email" id="hf-email" placeholder="Enter your email..." autocomplete="email" />
           <button type="button" class="hero-pill-btn" onclick="handleHeroForm()">
             Get Free Estimate
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1423,7 +1423,6 @@
               <div class="fdark"><label>First Name</label><input type="text" id="f-fname" placeholder="John" autocomplete="given-name" /></div>
               <div class="fdark"><label>Last Name</label><input type="text" id="f-lname" placeholder="Smith" autocomplete="family-name" /></div>
             </div>
-            <div class="fdark"><label>Phone Number</label><input type="tel" id="f-phone" placeholder="(702) 000-0000" autocomplete="tel" /></div>
             <div class="fdark"><label>Email Address</label><input type="email" id="f-email" placeholder="you@email.com" autocomplete="email" /></div>
           </div>
           <p style="font-size:.82rem;color:rgba(255,255,255,.25);margin-top:1rem;line-height:1.7">Your info is private. We'll only use it to send your quote and follow up about your project.</p>
@@ -1439,18 +1438,13 @@
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#3CCECB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3>You're All Set!</h3>
-          <p>We received your request and will be in touch within 2 hours.<br>Or call us now at <a href="tel:5083338415" style="color:var(--orange)">(508) 333-8415</a>.</p>
+          <p>We received your request and will be in touch within 2 hours.<br>Or email us at <a href="mailto:everlastgcus@gmail.com" style="color:var(--orange)">everlastgcus@gmail.com</a>.</p>
         </div>
 
       </div><!-- end multistep-form -->
 
       <!-- Contact info + call button — single row below form -->
       <div class="contact-info-row reveal" style="transition-delay:.2s">
-        <div class="cir-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF810E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-          <a href="tel:5083338415">(508) 333-8415</a>
-        </div>
-        <div class="cir-sep"></div>
         <div class="cir-item">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FF810E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           <a href="mailto:everlastgcus@gmail.com">everlastgcus@gmail.com</a>
@@ -1683,13 +1677,13 @@
 
     /* ── Hero quick form ────────────────────────────── */
     function handleHeroForm() {
-      const phone = document.getElementById('hf-phone').value.trim();
-      if (!phone) {
-        document.getElementById('hf-phone').focus();
+      const email = document.getElementById('hf-email').value.trim();
+      if (!email) {
+        document.getElementById('hf-email').focus();
         return;
       }
       // Pre-fill step 3 and scroll to main form
-      document.getElementById('f-phone').value = phone;
+      document.getElementById('f-email').value = email;
       document.getElementById('contact').scrollIntoView({ behavior:'smooth' });
     }
 
@@ -1750,11 +1744,10 @@
 
     function submitMultiForm() {
       const fname = document.getElementById('f-fname').value.trim();
-      const phone = document.getElementById('f-phone').value.trim();
       const email = document.getElementById('f-email').value.trim();
-      if (!fname || (!phone && !email)) {
+      if (!fname || !email) {
         if (!fname) document.getElementById('f-fname').focus();
-        else document.getElementById('f-phone').focus();
+        else document.getElementById('f-email').focus();
         return;
       }
       // Hide all steps, show success
