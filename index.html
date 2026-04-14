@@ -54,34 +54,10 @@
       object-fit:cover; object-position:center center; display:block;
     }
     .nav-links { display:flex; gap:2.8rem; list-style:none; align-items:center; }
-    .nav-links a { color:#fff; font-size:1rem; letter-spacing:0.06em; text-transform:none; font-weight:700; transition:color .25s; font-family:'Barlow',sans-serif; }
-    .nav-links a:hover { color:var(--orange); }
+    .nav-links a { color:rgba(255,255,255,.9); font-size:0.88rem; letter-spacing:0.06em; text-transform:none; font-weight:500; transition:color .25s; font-family:'Barlow',sans-serif; }
+    .nav-links a:hover { color:#fff; }
     nav.nav-scrolled .nav-links a { color:var(--black); }
     nav.nav-scrolled .nav-links a:hover { color:var(--orange); }
-    @keyframes signin-pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(255,129,14,.6); }
-      70%  { box-shadow: 0 0 0 10px rgba(255,129,14,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,129,14,0); }
-    }
-    .nav-signin {
-      color:#fff !important;
-      background: var(--orange) !important;
-      border:1.5px solid var(--orange) !important;
-      padding:0.6rem 1.4rem !important; font-weight:700 !important;
-      letter-spacing:0.1em !important; border-radius:4px;
-      transition: background .25s, transform .25s, box-shadow .25s !important;
-      font-size:1rem !important;
-      animation: signin-pulse 2s ease-in-out infinite !important;
-    }
-    .nav-signin:hover {
-      background: var(--orange-lt) !important;
-      border-color: var(--orange-lt) !important;
-      transform: translateY(-2px) !important;
-      box-shadow: 0 8px 22px rgba(255,129,14,.45) !important;
-      animation: none !important;
-    }
-    nav.nav-scrolled .nav-signin { background:var(--orange) !important; border-color:var(--orange) !important; color:#fff !important; }
-    nav.nav-scrolled .nav-signin:hover { background:var(--orange-lt) !important; border-color:var(--orange-lt) !important; transform:translateY(-2px) !important; box-shadow:0 8px 22px rgba(255,129,14,.45) !important; }
     .nav-cta {
       color:#fff !important;
       border:1.5px solid rgba(255,255,255,.55) !important;
@@ -681,60 +657,10 @@
     .reveal-x.visible { opacity:1; transform:translateX(0); }
     .reveal-x.from-left { transform:translateX(-32px); }
 
-    /* ━━━━━━━ HAMBURGER & MOBILE NAV ━━━━━━━ */
-    .hamburger-btn {
-      display:none; flex-direction:column; justify-content:center; gap:5px;
-      width:40px; height:40px; cursor:pointer; background:none; border:none; padding:5px; z-index:201; flex-shrink:0;
-    }
-    .hamburger-btn span { display:block; width:24px; height:2.5px; background:#fff; border-radius:2px; transition:all .3s ease; }
-    nav.nav-scrolled .hamburger-btn span { background:var(--black); }
-    .hamburger-btn.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-    .hamburger-btn.open span:nth-child(2) { opacity:0; transform:scaleX(0); }
-    .hamburger-btn.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-
-    .mobile-nav {
-      position:fixed; top:0; left:0; right:0; background:var(--dark);
-      z-index:199; padding:88px 1.8rem 2rem;
-      transform:translateY(-110%);
-      transition:transform .4s cubic-bezier(.625,.05,0,1);
-      border-bottom:2px solid var(--orange);
-      box-shadow:0 20px 60px rgba(0,0,0,.5);
-    }
-    .mobile-nav.open { transform:translateY(0); }
-    .mobile-nav ul { list-style:none; display:flex; flex-direction:column; }
-    .mobile-nav ul li a {
-      display:block; padding:.95rem 0;
-      font-size:1.5rem; font-family:'Bebas Neue',sans-serif; letter-spacing:.06em;
-      color:rgba(255,255,255,.7); border-bottom:1px solid rgba(255,255,255,.07);
-      transition:color .2s, padding-left .2s;
-    }
-    .mobile-nav ul li a:hover { color:var(--orange); padding-left:.5rem; }
-    .mobile-nav-ctas { display:flex; flex-direction:column; gap:.7rem; margin-top:1.4rem; }
-    .mobile-nav-signin {
-      display:block; text-align:center; padding:.85rem;
-      border:1.5px solid var(--orange); border-radius:5px; color:var(--orange);
-      font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:.2em;
-      text-transform:uppercase; font-weight:700; transition:all .2s;
-    }
-    .mobile-nav-signin:hover { background:var(--orange); color:#fff; }
-    .mobile-nav-estimate {
-      display:block; text-align:center; padding:.85rem;
-      background:var(--orange); border-radius:5px; color:#fff;
-      font-family:'Barlow Condensed',sans-serif; font-size:.76rem; letter-spacing:.2em;
-      text-transform:uppercase; font-weight:700; transition:background .2s;
-    }
-    .mobile-nav-estimate:hover { background:var(--orange-lt); }
-    .mobile-nav-overlay {
-      position:fixed; inset:0; background:rgba(0,0,0,.55);
-      z-index:198; opacity:0; pointer-events:none; transition:opacity .3s ease;
-    }
-    .mobile-nav-overlay.show { opacity:1; pointer-events:all; }
-
     /* ━━━━━━━ RESPONSIVE ━━━━━━━ */
     /* ━━━━━━━ TABLET ≤1100px ━━━━━━━ */
     @media (max-width:1100px) {
       nav { padding:0 2rem; }
-      .hamburger-btn { display:flex; }
       nav.nav-scrolled { height:72px; }
       .nav-logo img { width:200px; height:54px; }
       .nav-links { display:none; }
@@ -949,37 +875,6 @@
       animation:heroScan 8s linear infinite;
     }
     @keyframes heroScan { to { left:115%; } }
-
-    /* ── Lead toast notification ── */
-    .ev-toast {
-      position: fixed;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1e1e1e;
-      border: 1px solid rgba(255,129,14,.5);
-      color: #fff;
-      padding: .85rem 2rem;
-      border-radius: 50px;
-      font-family: 'Barlow', sans-serif;
-      font-size: .92rem;
-      font-weight: 500;
-      z-index: 99999;
-      opacity: 0;
-      white-space: nowrap;
-      box-shadow: 0 8px 32px rgba(0,0,0,.5);
-      transition: opacity .35s, transform .35s;
-      pointer-events: none;
-    }
-    .ev-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-    .hero-pill-btn.sent {
-      background: #3CCECB !important;
-      cursor: default;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -1000,42 +895,18 @@
     </a>
   </div>
 
-  <!-- ░░ MOBILE NAV OVERLAY ░░ -->
-  <div class="mobile-nav-overlay" id="mobile-nav-overlay" onclick="closeMobileNav()"></div>
-
-  <!-- ░░ MOBILE NAV DRAWER ░░ -->
-  <div class="mobile-nav" id="mobile-nav">
-    <ul>
-      <li><a href="#services" onclick="closeMobileNav()">Services</a></li>
-      <li><a href="#why" onclick="closeMobileNav()">Why Us</a></li>
-      <li><a href="#work" onclick="closeMobileNav()">Our Work</a></li>
-      <li><a href="projects.html" onclick="closeMobileNav()">Projects</a></li>
-    </ul>
-    <div class="mobile-nav-ctas">
-      <a href="partner-login.html" class="mobile-nav-signin">Sign In to Portal</a>
-      <a href="#contact" class="mobile-nav-estimate" onclick="closeMobileNav()">Get Free Estimate</a>
-    </div>
-  </div>
-
   <!-- ░░ NAV ░░ -->
   <nav>
     <a href="index.html" class="nav-logo" aria-label="Everlast General Contracting">
-      <img src="Brand Assets/IMG_7498.PNG" alt="Everlast General Contracting" />
+      <img src="Brand%20Assets/logo-light.png" alt="Everlast General Contracting" />
     </a>
     <ul class="nav-links">
       <li><a href="#services">Services</a></li>
       <li><a href="#why">Why Us</a></li>
       <li><a href="#work">Our Work</a></li>
       <li><a href="projects.html">Projects</a></li>
-      <li><a href="partner-login.html" class="nav-signin">Sign In</a></li>
       <li><a href="#contact" class="nav-cta">Free Estimate</a></li>
     </ul>
-    <!-- Hamburger (mobile only) -->
-    <button class="hamburger-btn" id="hamburger-btn" aria-label="Open menu" onclick="toggleMobileNav()">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
   </nav>
 
   <!-- ░░ HERO ░░ -->
@@ -1669,7 +1540,7 @@
       <!-- Brand -->
       <div class="footer-brand">
         <div class="footer-logo-wrap">
-          <img src="Brand Assets/IMG_7498.PNG" alt="Everlast General Contracting" />
+          <img src="Brand Assets/logo-dark.png" alt="Everlast General Contracting" />
         </div>
         <p class="footer-tagline">Proudly building Las Vegas since 2010. Roofing, remodeling, outdoor living, and commercial buildouts — done right, built to last.</p>
         <div class="footer-social">
@@ -1698,7 +1569,6 @@
           <li><a href="projects.html">Projects</a></li>
           <li><a href="#process">How It Works</a></li>
           <li><a href="#contact">Get a Quote</a></li>
-          <li><a href="partner-login.html">Partner Portal</a></li>
         </ul>
       </div>
 
@@ -1755,32 +1625,6 @@
     window.addEventListener('scroll', updateNav, { passive:true });
     updateNav();
 
-    /* ── Mobile nav toggle ──────────────────────────── */
-    function toggleMobileNav() {
-      const btn = document.getElementById('hamburger-btn');
-      const nav = document.getElementById('mobile-nav');
-      const overlay = document.getElementById('mobile-nav-overlay');
-      const isOpen = nav.classList.contains('open');
-      if (isOpen) {
-        closeMobileNav();
-      } else {
-        btn.classList.add('open');
-        nav.classList.add('open');
-        overlay.classList.add('show');
-        document.body.style.overflow = 'hidden';
-      }
-    }
-    function closeMobileNav() {
-      document.getElementById('hamburger-btn').classList.remove('open');
-      document.getElementById('mobile-nav').classList.remove('open');
-      document.getElementById('mobile-nav-overlay').classList.remove('show');
-      document.body.style.overflow = '';
-    }
-    // Close on scroll (user scrolled past the menu)
-    window.addEventListener('scroll', () => {
-      if (document.getElementById('mobile-nav').classList.contains('open')) closeMobileNav();
-    }, { passive:true });
-
     /* ── Hero entry animations ──────────────────────── */
     const hero = document.querySelector('.hero');
     if (hero) hero.classList.add('animate-hero');
@@ -1835,99 +1679,16 @@
     }, { threshold: 0.5 });
     document.querySelectorAll('[data-target]').forEach(el => statIO.observe(el));
 
-    /* ── Lead CSV helpers ───────────────────────────── */
-    function saveLeadCSV(lead) {
-      const leads = JSON.parse(localStorage.getItem('ev_leads') || '[]');
-      leads.push(lead);
-      localStorage.setItem('ev_leads', JSON.stringify(leads));
-    }
-
-    function showLeadToast(msg) {
-      const t = document.createElement('div');
-      t.className = 'ev-toast';
-      t.innerHTML = '<span style="color:var(--orange);margin-right:.5rem">✓</span>' + msg;
-      document.body.appendChild(t);
-      requestAnimationFrame(() => { requestAnimationFrame(() => t.classList.add('show')); });
-      setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 400); }, 4000);
-    }
-
-    function downloadLeadsCSV() {
-      const leads = JSON.parse(localStorage.getItem('ev_leads') || '[]');
-      if (!leads.length) { alert('No leads recorded yet.'); return; }
-      const headers = [...new Set(leads.flatMap(l => Object.keys(l)))];
-      const rows = leads.map(l => headers.map(h => JSON.stringify(l[h] !== undefined ? l[h] : '')).join(','));
-      const csv = [headers.join(','), ...rows].join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'everlast-leads-' + new Date().toISOString().slice(0,10) + '.csv';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    }
-
-    // Keyboard shortcut: Ctrl+Shift+L  →  download leads CSV
-    document.addEventListener('keydown', function(e) {
-      if (e.ctrlKey && e.shiftKey && (e.key === 'L' || e.key === 'l')) {
-        e.preventDefault();
-        downloadLeadsCSV();
-      }
-    });
-
     /* ── Hero quick form ────────────────────────────── */
-    async function handleHeroForm() {
-      const phoneInput = document.getElementById('hf-phone');
-      const btn        = document.querySelector('.hero-pill-btn');
-      const phone      = phoneInput.value.trim();
-
+    function handleHeroForm() {
+      const phone = document.getElementById('hf-phone').value.trim();
       if (!phone) {
-        phoneInput.focus();
-        phoneInput.style.outline = '2px solid var(--orange)';
-        setTimeout(() => { phoneInput.style.outline = ''; }, 1800);
+        document.getElementById('hf-phone').focus();
         return;
       }
-
-      // Prevent double-submit
-      if (btn.classList.contains('sent') || btn.disabled) return;
-
-      const origHTML = btn.innerHTML;
-      btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 11-6.219-8.56"/></svg> Sending…';
-      btn.disabled = true;
-
-      // 1) Save to localStorage CSV
-      saveLeadCSV({
-        type:      'Quick Hero Form',
-        phone:     phone,
-        timestamp: new Date().toISOString(),
-        source:    'Hero Pill Form'
-      });
-
-      // 2) Send email via FormSubmit.co (AJAX — no page redirect)
-      try {
-        await fetch('https://formsubmit.co/ajax/everlastgcus@gmail.com', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            _subject:  '🔔 New Lead — Quick Estimate Request',
-            _captcha:  'false',
-            _template: 'table',
-            Phone:     phone,
-            Source:    'Everlast Website — Hero Quick Form',
-            Timestamp: new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }) + ' (Pacific)'
-          })
-        });
-      } catch(err) { /* fail silently — lead is already saved locally */ }
-
-      // 3) Success state
-      btn.classList.add('sent');
-      btn.innerHTML = '✓ Request Sent!';
-      phoneInput.value = '';
-      showLeadToast('Got it! We\'ll call you shortly.');
-
-      setTimeout(() => {
-        btn.innerHTML = origHTML;
-        btn.classList.remove('sent');
-        btn.disabled = false;
-      }, 4000);
+      // Pre-fill step 3 and scroll to main form
+      document.getElementById('f-phone').value = phone;
+      document.getElementById('contact').scrollIntoView({ behavior:'smooth' });
     }
 
     /* ── Multi-step form ────────────────────────────── */
@@ -1985,58 +1746,16 @@
       document.getElementById('step-hint').textContent = stepHints[step] || '';
     }
 
-    async function submitMultiForm() {
+    function submitMultiForm() {
       const fname = document.getElementById('f-fname').value.trim();
-      const lname = document.getElementById('f-lname').value.trim();
       const phone = document.getElementById('f-phone').value.trim();
       const email = document.getElementById('f-email').value.trim();
-      const desc  = document.getElementById('f-desc') ? document.getElementById('f-desc').value.trim() : '';
-
       if (!fname || (!phone && !email)) {
         if (!fname) document.getElementById('f-fname').focus();
         else document.getElementById('f-phone').focus();
         return;
       }
-
-      // Disable submit button to prevent double-submit
-      const submitBtn = document.querySelector('[onclick="submitMultiForm()"]');
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Sending…'; }
-
-      // 1) Save full lead to localStorage CSV
-      saveLeadCSV({
-        type:        'Full Estimate Form',
-        name:        (fname + ' ' + lname).trim(),
-        phone:       phone,
-        email:       email,
-        services:    selectedServices.join('; ') || '',
-        description: desc,
-        timeline:    selectedTimeline || '',
-        timestamp:   new Date().toISOString(),
-        source:      'Contact Form — 3-Step'
-      });
-
-      // 2) Send email notification via FormSubmit.co (AJAX)
-      try {
-        await fetch('https://formsubmit.co/ajax/everlastgcus@gmail.com', {
-          method:  'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({
-            _subject:    '🔔 New Estimate Request — ' + fname + ' ' + lname,
-            _captcha:    'false',
-            _template:   'table',
-            Name:        (fname + ' ' + lname).trim(),
-            Phone:       phone || '—',
-            Email:       email || '—',
-            Services:    selectedServices.join(', ') || 'Not selected',
-            Description: desc || 'Not provided',
-            Timeline:    selectedTimeline || 'Not selected',
-            Source:      'Everlast Website — Full Contact Form',
-            Timestamp:   new Date().toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }) + ' (Pacific)'
-          })
-        });
-      } catch(err) { /* fail silently — lead saved locally */ }
-
-      // 3) Show success state
+      // Hide all steps, show success
       document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
       const success = document.getElementById('form-success');
       success.style.display = 'block';
@@ -2044,7 +1763,6 @@
       document.getElementById('form-progress').style.width = '100%';
       document.getElementById('step-label').textContent = 'Complete!';
       document.getElementById('step-hint').textContent = 'Request received';
-      showLeadToast('Request submitted! We\'ll be in touch within 2 hours.');
     }
 
     /* ── Cursor trail ──────────────────────────────── */
@@ -2203,5 +1921,6 @@
       }
     }
   </script>
+  <script src="https://widgets.leadconnectorhq.com/loader.js" data-resources-url="https://widgets.leadconnectorhq.com/chat-widget/loader.js" data-widget-id="69dda396d0d6ea5b09191a30"></script>
 </body>
 </html>
